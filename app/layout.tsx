@@ -1,7 +1,22 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
+import { Cormorant_Garamond, Manrope } from "next/font/google";
 import { siteConfig } from "./site-config";
 import "./globals.css";
+
+const displayFont = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const bodyFont = Manrope({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-body",
+  display: "swap",
+});
 
 export async function generateMetadata(): Promise<Metadata> {
   const requestHeaders = await headers();
@@ -23,9 +38,9 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Northstar Systems — Better business, by design",
       description: siteConfig.tagline,
       url: "/",
-      images: [{ url: "/og.png", width: 1732, height: 910, alt: "Northstar Systems connected business systems" }],
+      images: [{ url: "/northstar-horizon-v2.png", width: 1672, height: 938, alt: "Northstar Systems — modern systems for growing Philippine businesses" }],
     },
-    twitter: { card: "summary_large_image", title: siteConfig.name, description: siteConfig.tagline, images: ["/og.png"] },
+    twitter: { card: "summary_large_image", title: siteConfig.name, description: siteConfig.tagline, images: ["/northstar-horizon-v2.png"] },
     robots: { index: true, follow: true },
   };
 }
@@ -54,5 +69,5 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     ],
   };
 
-  return <html lang="en"><body><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }} />{children}</body></html>;
+  return <html lang="en" className={`${displayFont.variable} ${bodyFont.variable}`}><body><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }} />{children}</body></html>;
 }

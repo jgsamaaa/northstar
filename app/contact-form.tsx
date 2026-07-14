@@ -5,7 +5,7 @@ import { industries } from "./site-data";
 
 type FieldErrors = Record<string, string[] | undefined>;
 
-const services = ["Website", "Online booking", "POS and inventory", "AI assistant", "Automation", "Complete system", "Creator partnership"];
+const services = ["Website", "Booking system", "POS and inventory", "AI assistant", "Automation", "Support and maintenance", "Complete business system"];
 const budgets = ["Below ₱30,000", "₱30,000–₱60,000", "₱60,000–₱100,000", "₱100,000–₱250,000", "₱250,000+", "Not sure yet"];
 const timelines = ["As soon as possible", "Within 1–2 months", "Within 3–6 months", "Later this year", "Just exploring"];
 

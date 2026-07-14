@@ -43,12 +43,32 @@ export const services: Service[] = [
   {
     slug: "ai-automation",
     code: "04",
-    name: "Northstar Assist",
-    label: "AI & AUTOMATION",
+    name: "AI Assistants",
+    label: "AI CUSTOMER SUPPORT",
     headline: "AI customer assistance with real human support.",
     description: "A controlled AI assistant answers approved questions, explains services, checks connected availability, captures inquiries, and transfers customers to staff when necessary.",
     features: ["English, Tagalog, and Bisaya", "Frequently asked questions", "Service recommendations", "Availability checking", "Lead capture", "Human escalation", "Business-information updates", "Integration monitoring", "Technical support"],
     accent: "#72e7c3",
+  },
+  {
+    slug: "automation-integrations",
+    code: "05",
+    name: "Automation & Integrations",
+    label: "CONNECTED WORKFLOWS",
+    headline: "Make repeatable work happen automatically.",
+    description: "We connect approved tools and automate practical handoffs, notifications, follow-ups, and record updates so teams spend less time copying information between systems.",
+    features: ["Lead routing", "Booking notifications", "Customer follow-ups", "Record synchronization", "Staff alerts", "Workflow documentation", "Integration testing", "Human approval points"],
+    accent: "#7f9ac6",
+  },
+  {
+    slug: "support-maintenance",
+    code: "06",
+    name: "Support & Maintenance",
+    label: "ONGOING SUPPORT",
+    headline: "Keep the system useful after launch.",
+    description: "Ongoing support keeps business information current, monitors important integrations, resolves issues, and helps the system evolve with the team.",
+    features: ["Content updates", "Integration monitoring", "Issue resolution", "Performance checks", "Staff guidance", "Planned improvements", "Vendor coordination", "Documentation updates"],
+    accent: "#9aa7b9",
   },
 ];
 
@@ -62,11 +82,11 @@ export const industries = [
 ];
 
 export const process = [
-  ["01", "Systems Audit", "We review how the business handles customers, bookings, sales, inventory, and staff."],
-  ["02", "Solution Plan", "You receive a clear scope, timeline, recommended tools, and third-party costs."],
-  ["03", "Build & Connect", "We create the website and configure the approved booking, POS, automation, and AI tools."],
-  ["04", "Test & Train", "We test the complete workflow and train the owner and staff."],
-  ["05", "Launch & Support", "The system launches with documentation, monitoring, and optional ongoing support."],
+  ["01", "Discover", "We learn how customers, staff, bookings, sales, and support move through the business today."],
+  ["02", "Plan", "You receive a clear solution, scope, timeline, recommended tools, and transparent third-party costs."],
+  ["03", "Build", "We design, configure, and connect the approved website, booking, POS, automation, and AI tools."],
+  ["04", "Launch", "We test the complete workflow, train the team, and launch with practical documentation."],
+  ["05", "Support", "We monitor, maintain, troubleshoot, and improve the system as the business evolves."],
 ];
 
 export const packages = [

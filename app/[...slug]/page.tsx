@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { ContentPage } from "../site";
 import { services } from "../site-data";
 
-const valid = new Set(["services", "services/websites", "services/booking", "services/pos-inventory", "services/ai-automation", "industries", "about", "contact", "privacy", "terms"]);
+const valid = new Set(["services", "services/websites", "services/booking", "services/pos-inventory", "services/ai-automation", "services/automation-integrations", "services/support-maintenance", "industries", "about", "contact", "privacy", "terms"]);
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string[] }> }): Promise<Metadata> {
   const path = (await params).slug.join("/");
@@ -24,8 +24,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: details.title,
     description: details.description,
     alternates: { canonical: `/${path}` },
-    openGraph: { title: details.title, description: details.description, url: `/${path}`, images: ["/og.png"] },
-    twitter: { card: "summary_large_image", title: details.title, description: details.description, images: ["/og.png"] },
+    openGraph: { title: details.title, description: details.description, url: `/${path}`, images: ["/northstar-horizon-v2.png"] },
+    twitter: { card: "summary_large_image", title: details.title, description: details.description, images: ["/northstar-horizon-v2.png"] },
   };
 }
 

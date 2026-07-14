@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { publicSiteUrl } from "./site-config";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const routes = ["", "/services", "/services/websites", "/services/booking", "/services/pos-inventory", "/services/ai-automation", "/industries", "/about", "/contact", "/privacy", "/terms"];
+  const routes = ["", "/services", "/services/websites", "/services/booking", "/services/pos-inventory", "/services/ai-automation", "/services/automation-integrations", "/services/support-maintenance", "/industries", "/about", "/contact", "/privacy", "/terms"];
   return routes.map((route) => ({
     url: `${publicSiteUrl}${route}`,
     lastModified: new Date("2026-07-14"),

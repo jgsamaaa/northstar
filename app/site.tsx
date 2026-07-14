@@ -128,12 +128,18 @@ export function HomePage() {
       <div className="cinematic-inner">
         <Reveal className="cinematic-copy">
           <div className="cinematic-label"><i /> DIGITAL SYSTEMS FOR GROWING BUSINESSES</div>
-          <h1>Smart Systems.<br />Seamless Operations.<br /><em>Stronger Businesses.</em></h1>
-          <p>We build and automate the digital systems Philippine businesses need to grow—websites, bookings, POS, AI assistants, and more.</p>
+          <h1>One connected system.<br /><span>Every moving part</span><br /><em>working together.</em></h1>
+          <p>We design your website, booking, commerce, automation, and support around one customer journey—so growth creates momentum, not more admin.</p>
           <div className="cinematic-actions"><Link href="/services" className="button blue">Explore solutions <ArrowRight size={15} /></Link><Link href="/contact" className="button outline">Book a free consultation</Link></div>
         </Reveal>
-        <div className="value-strip">
-          {["Built for your business", "Save time, gain clarity", "Increase sales & bookings", "Local support, real people"].map((item, index) => <div key={item}><span>0{index + 1}</span><b>{item}</b></div>)}
+        <Reveal className="hero-system-index" delay={.12}>
+          <div className="hero-index-head"><span>SYSTEM INDEX</span><small>NS / 01—05</small></div>
+          {services.slice(0, 5).map((service, index) => <Link href={`/services/${service.slug}`} key={service.slug}><span>0{index + 1}</span><b>{service.name.replace("Northstar ", "")}</b><ArrowRight size={13} /></Link>)}
+        </Reveal>
+        <div className="hero-meta">
+          <span>PHILIPPINES · NATIONWIDE</span>
+          <span>WEB · BOOKING · COMMERCE · AI · SUPPORT</span>
+          <a href="#systems">SCROLL TO EXPLORE <b>↓</b></a>
         </div>
       </div>
     </section>

@@ -92,25 +92,16 @@ function FinalCTA() {
 }
 
 function HomeClosingCTA() {
-  const orbitNodes = ["Website", "Booking", "Sales", "Operations", "Support"];
-
   return <section className="home-close">
-    <div className="home-close-grid" aria-hidden="true" />
     <Reveal className="home-close-copy">
       <div className="home-close-status"><Sparkles size={16} strokeWidth={1.4} /><span>FOUNDING CLIENT PROGRAM</span><b>03 OPENINGS</b></div>
-      <h2>Bring your whole business <em>into one orbit.</em></h2>
-      <p>We partner with a small number of growing businesses to replace scattered tools and manual handoffs with one connected operating system.</p>
-      <div className="home-close-actions"><Link href="/contact" className="button blue">Start a conversation <ArrowRight size={15} /></Link><a href={`mailto:${siteConfig.email}`} className="text-button">Email Northstar</a></div>
+      <h2>Ready to make the business <em>easier to run?</em></h2>
     </Reveal>
-    <Reveal className="orbit-system" delay={.12}>
-      <div className="orbit-ring orbit-ring-outer" />
-      <div className="orbit-ring orbit-ring-inner" />
-      <div className="orbit-core"><Logo compact /><span>YOUR<br />BUSINESS</span></div>
-      {orbitNodes.map((node, index) => <div className={`orbit-node orbit-node-${index + 1}`} key={node}><i /><span>{node}</span></div>)}
+    <Reveal className="home-close-action" delay={.1}>
+      <p>Start with a focused systems audit. We’ll identify the highest-friction part of your customer journey and recommend the clearest place to begin.</p>
+      <div className="home-close-actions"><Link href="/contact" className="button light">Book a free consultation <ArrowRight size={15} /></Link><a href={`mailto:${siteConfig.email}`} className="text-button">Email Northstar</a></div>
+      <small>No obligation. Clear next steps, whether we work together or not.</small>
     </Reveal>
-    <div className="home-close-steps">
-      {[["01", "Diagnose", "Map the friction"], ["02", "Design", "Set the right system"], ["03", "Deliver", "Launch with support"]].map(([number, title, detail]) => <div key={number}><span>{number}</span><b>{title}</b><small>{detail}</small></div>)}
-    </div>
   </section>;
 }
 
@@ -190,17 +181,17 @@ export function HomePage() {
     </section>
 
     <section className="founder-section">
-      <Reveal className="founder-visual">
-        <div className="founder-orbit"><i /><i /><Logo compact /></div>
-        <span>FOUNDER NOTE · NS—01</span>
-        <blockquote>“Clear systems create room for better work.”</blockquote>
-      </Reveal>
-      <Reveal className="founder-copy" delay={.1}>
+      <Reveal className="founder-copy">
         <Eyebrow>From the founder</Eyebrow>
-        <h2>Built with the business, <em>not around it.</em></h2>
-        <p className="founder-lede">Growing businesses should not have to choose between powerful technology and systems their teams can actually use.</p>
-        <p>Northstar is built around a simple standard: understand the real workflow first, recommend only what fits, and stay accountable after launch. The goal is not to add more software. It is to make the business feel clearer, faster, and easier to run.</p>
+        <h2>Good systems should feel <em>almost invisible.</em></h2>
+        <p className="founder-lede">They should remove friction, give teams confidence, and let the business focus on the work that matters.</p>
+        <p>That is the standard behind Northstar: understand the real workflow first, recommend only what fits, and stay accountable after launch. We are not here to add software for its own sake. We are here to make the business clearer and easier to run.</p>
         <div className="founder-signature"><span>FOUNDER</span><b>NORTHSTAR SYSTEMS</b></div>
+      </Reveal>
+      <Reveal className="founder-principles" delay={.1}>
+        <span className="founder-index">FOUNDER NOTE · 01</span>
+        <blockquote>“Technology earns its place when people can use it with confidence.”</blockquote>
+        <div>{[["01", "Listen first", "The workflow comes before the tool."], ["02", "Keep it practical", "Every feature needs a clear purpose."], ["03", "Stay accountable", "Launch is the beginning, not the handoff."]].map(([number, title, copy]) => <article key={number}><span>{number}</span><div><b>{title}</b><p>{copy}</p></div></article>)}</div>
       </Reveal>
     </section>
 

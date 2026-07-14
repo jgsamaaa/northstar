@@ -26,8 +26,8 @@ export function ContactForm() {
     setErrors({});
 
     const form = event.currentTarget;
-    const data = Object.fromEntries(new FormData(form).entries());
-    data.consent = data.consent === "on";
+    const entries = Object.fromEntries(new FormData(form).entries());
+    const data = { ...entries, consent: entries.consent === "on" };
 
     try {
       const response = await fetch("/api/contact", {

@@ -66,10 +66,42 @@ export const process = [
 ];
 
 export const packages = [
-  { name: "Website Launch", tag: "ESTABLISH", description: "For businesses that need a professional and trustworthy online presence.", solves: "Clarifies your offer, builds credibility, and turns visitors into useful inquiries.", includes: ["Custom business website", "Mobile-first design", "Service or product presentation", "Inquiry forms", "Contact integrations", "Google Maps", "Analytics", "Search-engine foundations"], scope: "Page count, content readiness, product volume, custom features, and integrations.", cta: "Request a Website Proposal" },
-  { name: "Booking Growth System", tag: "SCHEDULE", description: "For clinics, salons, resorts, rentals, venues, and appointment-based businesses.", solves: "Reduces manual availability checks, confirmations, rescheduling, and customer follow-up.", includes: ["Professional website", "Real-time booking calendar", "Staff or resource scheduling", "Confirmations", "Rescheduling and cancellation", "Customer database", "Admin dashboard", "Optional deposits and reminders"], scope: "Staff, locations, resources, booking rules, payment provider, and reminder volume.", cta: "Book a Systems Audit" },
-  { name: "POS & Inventory System", tag: "OPERATE", description: "For restaurants, cafés, stores, hardware, auto parts, pharmacies, and product-based businesses.", solves: "Connects products, in-store sales, stock levels, cashier activity, and practical reporting.", includes: ["Website or product catalog", "POS provider selection and setup", "Inventory configuration", "Product migration", "Staff accounts", "Reporting", "Training", "Integration planning"], scope: "Product count, branches, hardware, accredited provider, migration, and supported integrations.", cta: "Request a POS Consultation" },
-  { name: "Complete Business System", tag: "CONNECT", description: "For businesses that need website, booking, sales, inventory, AI, and automation working together.", solves: "Replaces fragmented customer and staff handoffs with one documented operating workflow.", includes: ["Website", "Booking", "POS and inventory", "Customer database", "AI assistance", "Automated follow-up", "Staff training", "Ongoing support options"], scope: "Locations, departments, users, integrations, automation complexity, and support needs.", cta: "Build My System" },
+  {
+    name: "Website Launch",
+    tag: "ESTABLISH",
+    description: "Businesses that need a professional and trustworthy online presence.",
+    outcome: "Present your business clearly and turn visitors into inquiries.",
+    primary: ["Custom business website", "Mobile-first design", "Service or product presentation", "Inquiry and contact integrations"],
+    expanded: ["Google Maps", "Analytics", "Search-engine foundations", "Content support", "Additional pages", "Optional integrations"],
+    cta: "Request a Website Proposal",
+  },
+  {
+    name: "Booking Growth System",
+    tag: "SCHEDULE",
+    description: "Clinics, salons, resorts, venues, rentals, and appointment-based businesses.",
+    outcome: "Let customers see availability and book without waiting for a reply.",
+    primary: ["Professional website", "Real-time booking calendar", "Staff or resource scheduling", "Confirmations and customer records"],
+    expanded: ["Rescheduling", "Cancellation rules", "Deposits", "Automated reminders", "Digital forms", "Waitlists", "Multi-branch support"],
+    cta: "Book a Systems Audit",
+  },
+  {
+    name: "POS & Inventory System",
+    tag: "OPERATE",
+    description: "Restaurants, cafés, retail stores, hardware, auto parts, pharmacies, and product-based businesses.",
+    outcome: "Connect products, sales, inventory, and reporting.",
+    primary: ["POS provider setup", "Inventory configuration", "Product migration", "Staff accounts and training"],
+    expanded: ["Website catalog", "Website-to-POS integration when supported", "Low-stock alerts", "Sales reports", "Branch setup", "Hardware planning", "BIR-ready setup assistance"],
+    cta: "Request a POS Consultation",
+  },
+  {
+    name: "Complete Business System",
+    tag: "CONNECT",
+    description: "Businesses that need website, booking, sales, inventory, AI assistance, and automation working together.",
+    outcome: "Connect the full customer journey into one practical workflow.",
+    primary: ["Website", "Booking", "POS and inventory", "AI customer assistance"],
+    expanded: ["Customer database", "Automated follow-up", "Staff training", "Business workflow automation", "Reporting", "Integration planning", "Ongoing support"],
+    cta: "Build My System",
+  },
 ];
 
 export const commerceDisclaimer = "BIR-ready POS setup assistance uses an appropriate accredited provider. Accreditation, Permit-to-Use requirements, subscriptions, hardware, final tax configuration, and website-to-POS integration depend on the selected provider and supported integrations. Confirm tax requirements with your accountant or CPA.";

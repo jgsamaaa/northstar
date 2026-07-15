@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Bot, CalendarDays, Check, CheckCircle2, Headphones, Mail, MessageCircle, MonitorSmartphone, PackageSearch, Phone, ShieldCheck, Store, Workflow } from "lucide-react";
+import { ArrowRight, Bot, CalendarDays, Check, CheckCircle2, ChevronDown, Headphones, Mail, MessageCircle, MonitorSmartphone, PackageSearch, Phone, ShieldCheck, Store, Workflow } from "lucide-react";
 import { ContactForm } from "./contact-form";
 import { IndustrySelector, ProductDemo } from "./interactive-sections";
 import { Logo } from "./logo";
@@ -46,10 +46,25 @@ function Shell({ children }: { children: React.ReactNode }) { return <div classN
 function Eyebrow({ children }: { children: React.ReactNode }) { return <span className="eyebrow">{children}</span>; }
 const trustLaunch = ["A complete working website or configured system", "Admin access", "Staff training", "Written documentation", "Mobile and desktop testing", "Tested customer workflows", "Defined support period", "Clear third-party costs", "Secure account handover", "Client ownership of agreed accounts and assets"];
 const trustProtection = ["Written scope", "Defined milestones", "Clear payment schedule", "Client approval before launch", "No surprise third-party costs", "Secure credential handling", "Backups", "Documentation", "Post-launch support plan"];
-const auditIncludes = ["A 20–30 minute discovery call", "A review of how the business currently handles customers, bookings, sales, inventory, or inquiries", "Identification of the highest-friction workflow", "A recommended starting system", "A summary of likely tools and integrations", "A clear explanation of the next project step"];
+const auditPrimary = ["20–30 minute discovery call", "Review of your current workflow", "Recommended starting system"];
+const auditExpanded = ["Review of the highest-friction workflow", "Discussion of likely tools and integrations", "Recommended next step", "Explanation of the project process", "Clarification of likely third-party costs"];
 const conversationTrust = ["Free 20–30 minute discovery call", "Clear recommendation with no obligation", "Written proposal only if the project is a good fit"];
 
-function AuditDetails({ compact=false }: { compact?:boolean }) { return <div className={compact?"audit-details compact":"audit-details"}><h3>What the free systems audit includes</h3><ul>{auditIncludes.map(item=><li key={item}><Check size={16}/>{item}</li>)}</ul><p>The free audit does not include custom website designs, full technical specifications, software configuration, detailed automation mapping, or implementation work.</p></div>; }
+function AuditDetails() {
+  return <div className="audit-details">
+    <h2>Find the clearest place to start.</h2>
+    <p className="audit-copy">In a short discovery call, we review how your business currently handles customers, bookings, sales, inventory, or inquiries—and recommend the most practical system to improve first.</p>
+    <ul className="audit-primary">{auditPrimary.map(item => <li key={item}><Check size={17} aria-hidden="true" />{item}</li>)}</ul>
+    <Link className="button primary audit-cta" href={siteConfig.systemsAuditLink}>Book a Free Systems Audit <ArrowRight size={18} /></Link>
+    <details className="audit-disclosure">
+      <summary>See what the audit includes <ChevronDown size={18} aria-hidden="true" /></summary>
+      <div className="audit-expanded">
+        <ul>{auditExpanded.map(item => <li key={item}><Check size={16} aria-hidden="true" />{item}</li>)}</ul>
+        <blockquote>The free audit does not include custom designs, full technical specifications, detailed automation mapping, software configuration, or implementation work.</blockquote>
+      </div>
+    </details>
+  </div>;
+}
 function ContactIntro() {
   const messengerLink = siteConfig.messengerLink || siteConfig.socialLinks.facebook;
   return <Reveal className="contact-intro">
@@ -84,7 +99,7 @@ export function HomePage() {
       <div className="hero-content"><Reveal><Eyebrow>DIGITAL SYSTEMS FOR PHILIPPINE BUSINESSES</Eyebrow><h1>One connected system for your entire business.</h1><p>Northstar Systems builds your website, online booking, POS and inventory setup, AI customer assistant, and automation—then connects everything into one clear workflow.</p><div className="hero-actions"><Link className="button primary" href={siteConfig.systemsAuditLink}>Book a Free Systems Audit <ArrowRight size={19}/></Link><Link className="button secondary" href="#services">Explore Our Systems</Link></div><div className="service-line">Websites <i/> Online Booking <i/> POS & Inventory <i/> AI Assistance <i/> Automation <i/> Support</div></Reveal></div>
     </section>
 
-    <section className="audit-scope-section"><Reveal><Eyebrow>FOCUSED FIRST STEP</Eyebrow><AuditDetails/></Reveal></section>
+    <section className="audit-scope-section"><Reveal><Eyebrow>FREE SYSTEMS AUDIT</Eyebrow><AuditDetails/></Reveal></section>
 
     <section className="services-section" id="services"><Reveal className="section-title split-title"><div><Eyebrow>SIX CONNECTED CAPABILITIES</Eyebrow><h2>Everything your business needs to operate online.</h2></div><p>Start with one system or connect your website, bookings, sales, inventory, customer assistance, and support into one practical workflow.</p></Reveal>
       <div className="service-list">{services.map((service, index) => { const Icon = serviceIcons[index]; return <Reveal key={service.slug}><article className={`service-row row-${index + 1}`}><div className="service-number">{service.code}</div><div className="service-copy"><div><Icon size={26}/><Eyebrow>{service.name}</Eyebrow></div><h3>{service.headline}</h3><p>{service.description}</p><ul>{service.features.slice(0, 4).map(item => <li key={item}><Check size={16}/>{item}</li>)}</ul><Link href={`/services/${service.slug}`}>Explore {service.name} <ArrowRight size={17}/></Link></div><ServicePreview index={index}/></article></Reveal>; })}</div>
@@ -95,7 +110,7 @@ export function HomePage() {
 
     <section className="trust-section"><Reveal className="section-title"><Eyebrow>CONFIDENCE BEFORE GO-LIVE</Eyebrow><h2>What you receive before launch</h2></Reveal><div className="trust-columns"><Reveal><article><div className="trust-index"><ShieldCheck/><span>DELIVERY STANDARD</span></div><ul>{trustLaunch.map((item,index) => <li key={item}><span>{String(index + 1).padStart(2,"0")}</span>{item}</li>)}</ul></article></Reveal><Reveal><article><div className="trust-index"><CheckCircle2/><span>HOW YOUR PROJECT IS PROTECTED</span></div><h3>Clear agreements before important decisions.</h3><ul>{trustProtection.map((item,index) => <li key={item}><span>{String(index + 1).padStart(2,"0")}</span>{item}</li>)}</ul></article></Reveal></div></section>
 
-    <section className="packages-section" id="packages"><Reveal className="section-title split-title"><div><Eyebrow>SOLUTION PACKAGES</Eyebrow><h2>A clear place to begin.</h2></div><p>Choose the closest starting point. Every system is then scoped around your actual workflow, team, locations, tools, and support needs.</p></Reveal><div className="packages-grid">{packages.map((item, index) => <Reveal key={item.name}><article className={index === 3 ? "featured" : ""}><div className="package-label"><span>{item.tag}</span><b>0{index + 1}</b></div><h3>{item.name}</h3><p>{item.description}</p><div className="package-solves"><span>PROBLEM IT SOLVES</span><p>{item.solves}</p></div><ul>{item.includes.map(feature => <li key={feature}><Check/>{feature}</li>)}</ul><div className="scope-note"><span>WHAT MAY AFFECT THE FINAL SCOPE</span><p>{item.scope}</p></div><Link href="#contact">{item.cta}<ArrowRight/></Link></article></Reveal>)}</div><div className="pricing-notes"><p><b>Why pricing is customized:</b> Every Northstar system is scoped around the business’s workflow, number of locations, staff, products, booking resources, required integrations, and support needs. After a free systems audit, we provide a clear proposal with the project scope, timeline, and third-party costs.</p><p><b>Provider-cost note:</b> Third-party software, POS subscriptions, accreditation requirements, hardware, messaging, payment processing, AI usage, and other provider fees are quoted separately when applicable.</p></div></section>
+    <section className="packages-section" id="packages"><Reveal className="section-title split-title"><div><Eyebrow>SOLUTION PACKAGES</Eyebrow><h2>A clear place to begin.</h2></div><p>Choose the closest starting point. Every system is then scoped around your actual workflow, team, locations, tools, and support needs.</p></Reveal><div className="packages-grid">{packages.map((item, index) => <Reveal key={item.name}><article className={index === 3 ? "featured" : ""}><div className="package-label"><span>{item.tag}</span><b>0{index + 1}</b></div><h3>{item.name}</h3><div className="package-audience"><span>WHO IT IS FOR</span><p>{item.description}</p></div><p className="package-outcome">{item.outcome}</p><ul className="package-primary">{item.primary.map(feature => <li key={feature}><Check aria-hidden="true" />{feature}</li>)}</ul><details className="package-disclosure"><summary>View full scope <ChevronDown size={18} aria-hidden="true" /></summary><ul>{item.expanded.map(feature => <li key={feature}><Check aria-hidden="true" />{feature}</li>)}</ul></details><Link href="#contact">{item.cta}<ArrowRight/></Link></article></Reveal>)}</div><div className="pricing-notes"><p><b>Why pricing is customized:</b> Every Northstar system is scoped around the business’s workflow, number of locations, staff, products, booking resources, required integrations, and support needs. After a free systems audit, we provide a clear proposal with the project scope, timeline, and third-party costs.</p><p><b>Provider-cost note:</b> Third-party software, POS subscriptions, accreditation requirements, hardware, messaging, payment processing, AI usage, and other provider fees are quoted separately when applicable.</p></div></section>
 
     <section className="process-section" id="process"><Reveal className="section-title"><Eyebrow>HOW IT WORKS</Eyebrow><h2>From disconnected tools to one working system.</h2></Reveal><div className="process-list">{process.map(([number, title, copy]) => <Reveal key={number}><article><span>{number}</span><div><h3>{title}</h3><p>{copy}</p></div></article></Reveal>)}</div></section>
 

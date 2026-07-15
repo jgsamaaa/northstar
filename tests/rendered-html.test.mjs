@@ -17,8 +17,9 @@ test("renders the Northstar homepage", async () => {
   assert.match(html, /Complete Business System/);
   assert.match(html, /Built for how your business operates/);
   assert.match(html, /Everything your business needs to operate online/);
-  assert.match(html, /What the free systems audit includes/);
-  assert.equal((html.match(/What the free systems audit includes/g) || []).length, 1);
+  assert.match(html, /Find the clearest place to start/);
+  assert.match(html, /See what the audit includes/);
+  assert.equal((html.match(/See what the audit includes/g) || []).length, 1);
   assert.match(html, /Let(?:â€™|’)s find the clearest place to start/);
   assert.match(html, /Request a Free Systems Audit/);
   assert.doesNotMatch(html, /What happens next/);

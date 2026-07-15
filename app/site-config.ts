@@ -6,15 +6,15 @@ export const siteConfig = {
     "Connected websites, booking, POS and inventory implementation, AI assistance, and automation for Philippine businesses.",
   email: "hello@northstarsystems.ph",
   emailConfigured: false,
-  phone: "",
-  messengerLink: "",
+  phone: "" as string,
+  messengerLink: "" as string,
   location: "Serving businesses across the Philippines",
   domain: "https://northstar-three-liard.vercel.app",
   systemsAuditLink: "/#contact",
   socialLinks: {
-    facebook: "",
-    instagram: "",
-    linkedin: "",
+    facebook: "" as string,
+    instagram: "" as string,
+    linkedin: "" as string,
   },
 } as const;
 

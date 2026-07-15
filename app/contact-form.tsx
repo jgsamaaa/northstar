@@ -5,7 +5,7 @@ import { industries } from "./site-data";
 
 type FieldErrors = Record<string, string[] | undefined>;
 
-const services = ["Website", "Booking system", "POS and inventory", "AI assistant", "Automation", "Support and maintenance", "Complete business system"];
+const services = ["Northstar Web", "Northstar Booking", "Northstar POS & Inventory", "Northstar Assist", "Northstar Automation", "Northstar Support", "Complete Business System"];
 const budgets = ["Below ₱30,000", "₱30,000–₱60,000", "₱60,000–₱100,000", "₱100,000–₱250,000", "₱250,000+", "Not sure yet"];
 const timelines = ["As soon as possible", "Within 1–2 months", "Within 3–6 months", "Later this year", "Just exploring"];
 
@@ -74,10 +74,10 @@ export function ContactForm() {
       <label>Approximate budget<select name="budget" required defaultValue="" aria-invalid={Boolean(errors.budget)}><option value="" disabled>Select a range</option>{budgets.map((budget) => <option key={budget}>{budget}</option>)}</select><ErrorText name="budget" errors={errors} /></label>
     </div>
     <label>Project timeline<select name="timeline" required defaultValue="" aria-invalid={Boolean(errors.timeline)}><option value="" disabled>Select a timeline</option>{timelines.map((timeline) => <option key={timeline}>{timeline}</option>)}</select><ErrorText name="timeline" errors={errors} /></label>
-    <label>Business challenge<textarea name="challenge" required rows={6} placeholder="What happens today when a customer inquires, books, orders, or needs support?" aria-invalid={Boolean(errors.challenge)} /><ErrorText name="challenge" errors={errors} /></label>
+    <label>Main business problem<textarea name="challenge" required rows={6} placeholder="What happens today when a customer inquires, books, orders, or needs support?" aria-invalid={Boolean(errors.challenge)} /><ErrorText name="challenge" errors={errors} /></label>
     <label className="consent"><input name="consent" type="checkbox" required aria-invalid={Boolean(errors.consent)} /><span>I agree that Northstar Systems may use these details to respond to my inquiry.<ErrorText name="consent" errors={errors} /></span></label>
     {status === "error" && <p className="form-message error" role="alert">{message}</p>}
-    <button className="button dark" type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : "Request my free systems audit"} <span aria-hidden="true">↗</span></button>
+    <button className="button primary" type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : "Request my free systems audit"} <span aria-hidden="true">↗</span></button>
     <small>Your information is sent securely and used only to respond to this inquiry.</small>
   </form>;
 }

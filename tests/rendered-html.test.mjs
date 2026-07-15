@@ -12,8 +12,9 @@ test("renders the Northstar homepage", async () => {
   const response = await request();
   assert.equal(response.status, 200);
   const html = await response.text();
-  assert.match(html, /Smart Systems/);
-  assert.match(html, /Stronger Businesses/);
+  assert.match(html, /One connected system/);
+  assert.match(html, /Product demonstration/i);
+  assert.match(html, /Complete Business System/);
   assert.match(html, /Northstar Systems/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/);
 });

@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Bot, CalendarDays, Check, CheckCircle2, Headphones, MonitorSmartphone, PackageSearch, ShieldCheck, Store, Workflow } from "lucide-react";
+import { ArrowRight, Bot, CalendarDays, Check, CheckCircle2, Headphones, Mail, MessageCircle, MonitorSmartphone, PackageSearch, Phone, ShieldCheck, Store, Workflow } from "lucide-react";
 import { ContactForm } from "./contact-form";
 import { IndustrySelector, ProductDemo } from "./interactive-sections";
 import { Logo } from "./logo";
@@ -47,10 +47,26 @@ function Eyebrow({ children }: { children: React.ReactNode }) { return <span cla
 const trustLaunch = ["A complete working website or configured system", "Admin access", "Staff training", "Written documentation", "Mobile and desktop testing", "Tested customer workflows", "Defined support period", "Clear third-party costs", "Secure account handover", "Client ownership of agreed accounts and assets"];
 const trustProtection = ["Written scope", "Defined milestones", "Clear payment schedule", "Client approval before launch", "No surprise third-party costs", "Secure credential handling", "Backups", "Documentation", "Post-launch support plan"];
 const auditIncludes = ["A 20–30 minute discovery call", "A review of how the business currently handles customers, bookings, sales, inventory, or inquiries", "Identification of the highest-friction workflow", "A recommended starting system", "A summary of likely tools and integrations", "A clear explanation of the next project step"];
-const nextSteps = ["We review the business and project request", "We contact qualified inquiries", "We schedule the free systems audit", "We recommend the clearest starting point", "We send a written proposal if the project is a good fit"];
+const conversationTrust = ["Free 20–30 minute discovery call", "Clear recommendation with no obligation", "Written proposal only if the project is a good fit"];
 
 function AuditDetails({ compact=false }: { compact?:boolean }) { return <div className={compact?"audit-details compact":"audit-details"}><h3>What the free systems audit includes</h3><ul>{auditIncludes.map(item=><li key={item}><Check size={16}/>{item}</li>)}</ul><p>The free audit does not include custom website designs, full technical specifications, software configuration, detailed automation mapping, or implementation work.</p></div>; }
-function ContactIntro() { return <Reveal className="contact-intro"><Eyebrow>FREE SYSTEMS AUDIT</Eyebrow><h2>Show us where the business feels disconnected.</h2><p>Tell us what happens today when a customer inquires, books, orders, or needs help. We’ll identify the highest-friction area and recommend a practical place to begin.</p><AuditDetails compact/><div className="next-steps"><h3>What happens next</h3><ol>{nextSteps.map((item,index)=><li key={item}><span>0{index+1}</span>{item}</li>)}</ol><p>Completing the inquiry form does not create a contract or require payment.</p></div></Reveal>; }
+function ContactIntro() {
+  const messengerLink = siteConfig.messengerLink || siteConfig.socialLinks.facebook;
+  return <Reveal className="contact-intro">
+    <Eyebrow>START A CONVERSATION</Eyebrow>
+    <h2>Let’s find the clearest place to start.</h2>
+    <p>Tell us what feels disconnected in your business today—customer inquiries, bookings, sales, inventory, follow-up, or support. We’ll review your situation and recommend the most practical next step.</p>
+    <ul className="contact-trust">{conversationTrust.map((item) => <li key={item}><Check size={17} aria-hidden="true" />{item}</li>)}</ul>
+    <div className="direct-contact">
+      <p>Prefer to message us directly?</p>
+      <div>
+        <a href={`mailto:${siteConfig.email}`}><Mail size={20} aria-hidden="true" /><span><small>Email</small><strong>{siteConfig.email}</strong></span></a>
+        {messengerLink && <a href={messengerLink} target="_blank" rel="noreferrer"><MessageCircle size={20} aria-hidden="true" /><span><small>Messenger / Facebook</small><strong>Message Northstar</strong></span></a>}
+        {siteConfig.phone && <a href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}><Phone size={20} aria-hidden="true" /><span><small>Phone</small><strong>{siteConfig.phone}</strong></span></a>}
+      </div>
+    </div>
+  </Reveal>;
+}
 
 function ServicePreview({ index }: { index: number }) {
   if (index === 0) return <div className="service-preview browser-preview"><div><i/><i/><i/></div><span>Northstar Studio</span><h4>Make your next move clear.</h4><button>Start a project</button></div>;

@@ -75,16 +75,18 @@ export async function POST(request: NextRequest) {
 
   const input = parsed.data;
   const rows = [
-    ["Name", input.name], ["Business", input.business], ["Email", input.email], ["Phone / Messenger", input.phone],
-    ["City", input.city], ["Industry", input.industry], ["Current site / page", input.currentWebsite || "Not provided"],
-    ["Services", input.services], ["Estimated investment", input.budget || "Not provided"], ["Preferred timeline", input.timeline || "Not provided"], ["Business challenge", input.challenge],
+    ["Name", input.name], ["Business", input.business], ["Email / Messenger", input.contact],
+    ["Service needed", input.services], ["Current site / page", input.currentWebsite || "Not provided"],
+    ["What they need help with", input.challenge],
   ];
+
+  const replyTo = /^\S+@\S+\.\S+$/.test(input.contact) ? input.contact : undefined;
 
   const resend = new Resend(apiKey);
   const result = await resend.emails.send({
     from: process.env.CONTACT_FROM_EMAIL || "Northstar Systems <onboarding@resend.dev>",
     to: [toEmail],
-    replyTo: input.email,
+    ...(replyTo ? { replyTo } : {}),
     subject: `Systems audit request — ${input.business}`,
     html: `<h1>New Northstar Systems audit request</h1><table>${rows.map(([label, value]) => `<tr><th align="left" valign="top" style="padding:6px 18px 6px 0">${escapeHtml(label)}</th><td style="padding:6px 0">${escapeHtml(value)}</td></tr>`).join("")}</table>`,
   });

@@ -1,5 +1,14 @@
 import { spawn } from "node:child_process";
-import { createWriteStream, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  createWriteStream,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  statSync,
+  unlinkSync,
+  writeFileSync,
+} from "node:fs";
+import { randomUUID } from "node:crypto";
 import { resolve } from "node:path";
 
 const [, , label, ...commandParts] = process.argv;
@@ -35,6 +44,13 @@ writeFileSync(latestRunPath, `${JSON.stringify(runMetadata, null, 2)}\n`);
 log.write(`[diagnostics] started ${runMetadata.startedAt}\n`);
 log.write(`[diagnostics] command ${runMetadata.command}\n\n`);
 
+// `npm test` includes a production build. Serializing it with `npm run build`
+// prevents concurrent Vite processes from emptying and writing `dist` at the
+// same time, which is especially prone to ENOTEMPTY failures on Windows.
+const releaseBuildLock = ["build", "test"].includes(label)
+  ? await acquireBuildLock()
+  : () => {};
+
 const child = spawn(shellCommand, {
   cwd: process.cwd(),
   env: process.env,
@@ -63,6 +79,7 @@ for (const signal of ["SIGINT", "SIGTERM"]) {
 }
 
 child.on("error", (error) => {
+  releaseBuildLock();
   const finishedAt = new Date();
   const report = {
     ...runMetadata,
@@ -78,6 +95,7 @@ child.on("error", (error) => {
 });
 
 child.on("close", (code, signal) => {
+  releaseBuildLock();
   const finishedAt = new Date();
   const intentionallyStopped = Boolean(requestedSignal) && (code === 0 || signal === requestedSignal || code === null);
   const crashed = !intentionallyStopped && (code !== 0 || signal !== null);
@@ -101,6 +119,103 @@ child.on("close", (code, signal) => {
 
   process.exitCode = intentionallyStopped ? 0 : (code ?? (signal ? 1 : 0));
 });
+
+process.on("exit", releaseBuildLock);
+
+async function acquireBuildLock() {
+  const lockPath = resolve(diagnosticsDirectory, "build.lock");
+  const token = randomUUID();
+  const owner = {
+    token,
+    pid: process.pid,
+    label,
+    startedAt: new Date().toISOString(),
+  };
+  let announcedWait = false;
+
+  while (true) {
+    try {
+      writeFileSync(lockPath, `${JSON.stringify(owner, null, 2)}\n`, { flag: "wx" });
+      if (announcedWait) {
+        const message = "[diagnostics] build lock acquired; continuing\n";
+        process.stdout.write(message);
+        log.write(message);
+      }
+
+      let released = false;
+      return () => {
+        if (released) return;
+        released = true;
+        removeLockIfOwned(lockPath, token);
+      };
+    } catch (error) {
+      if (error?.code !== "EEXIST") throw error;
+    }
+
+    const currentOwner = readLockOwner(lockPath);
+    if (currentOwner && !isProcessRunning(currentOwner.pid)) {
+      removeLockIfOwned(lockPath, currentOwner.token);
+      continue;
+    }
+
+    // A malformed lock can only be removed after it has remained unchanged for
+    // a while. This covers a process killed between creating and writing it.
+    if (!currentOwner && isOlderThan(lockPath, 30_000)) {
+      try {
+        unlinkSync(lockPath);
+      } catch (error) {
+        if (error?.code !== "ENOENT") throw error;
+      }
+      continue;
+    }
+
+    if (!announcedWait) {
+      const ownerDescription = currentOwner
+        ? `${currentOwner.label ?? "another task"} (pid ${currentOwner.pid})`
+        : "another task";
+      const message = `[diagnostics] waiting for ${ownerDescription} to finish using dist\n`;
+      process.stdout.write(message);
+      log.write(message);
+      announcedWait = true;
+    }
+
+    await new Promise((resolveDelay) => setTimeout(resolveDelay, 200));
+  }
+}
+
+function readLockOwner(lockPath) {
+  try {
+    return JSON.parse(readFileSync(lockPath, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function removeLockIfOwned(lockPath, token) {
+  try {
+    if (readLockOwner(lockPath)?.token === token) unlinkSync(lockPath);
+  } catch (error) {
+    if (error?.code !== "ENOENT") throw error;
+  }
+}
+
+function isProcessRunning(pid) {
+  if (!Number.isInteger(pid) || pid <= 0) return false;
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch (error) {
+    return error?.code === "EPERM";
+  }
+}
+
+function isOlderThan(path, ageMs) {
+  try {
+    return Date.now() - statSync(path).mtimeMs > ageMs;
+  } catch {
+    return false;
+  }
+}
 
 function writeCrashReport(report) {
   const logTail = readLogTail(logPath, 80);

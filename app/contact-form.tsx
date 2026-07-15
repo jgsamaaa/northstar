@@ -6,7 +6,7 @@ import { industries } from "./site-data";
 type FieldErrors = Record<string, string[] | undefined>;
 
 const services = ["Northstar Web", "Northstar Booking", "Northstar POS & Inventory", "Northstar Assist", "Northstar Automation", "Northstar Support", "Complete Business System"];
-const budgets = ["Below ₱30,000", "₱30,000–₱60,000", "₱60,000–₱100,000", "₱100,000–₱250,000", "₱250,000+", "Not sure yet"];
+const budgets = ["Ready to review a custom proposal", "Planning for a focused first phase", "Planning a multi-system project", "Need help defining the investment", "Not sure yet"];
 const timelines = ["As soon as possible", "Within 1–2 months", "Within 3–6 months", "Later this year", "Just exploring"];
 
 function ErrorText({ name, errors }: { name: string; errors: FieldErrors }) {
@@ -71,7 +71,7 @@ export function ContactForm() {
     <label>Current website or Facebook page<input name="currentWebsite" type="url" inputMode="url" placeholder="https://" aria-invalid={Boolean(errors.currentWebsite)} /><ErrorText name="currentWebsite" errors={errors} /></label>
     <div className="field-row">
       <label>Services needed<select name="services" required defaultValue="" aria-invalid={Boolean(errors.services)}><option value="" disabled>Select a service</option>{services.map((service) => <option key={service}>{service}</option>)}</select><ErrorText name="services" errors={errors} /></label>
-      <label>Approximate budget<select name="budget" required defaultValue="" aria-invalid={Boolean(errors.budget)}><option value="" disabled>Select a range</option>{budgets.map((budget) => <option key={budget}>{budget}</option>)}</select><ErrorText name="budget" errors={errors} /></label>
+      <label>Investment planning<select name="budget" required defaultValue="" aria-invalid={Boolean(errors.budget)}><option value="" disabled>Select the closest answer</option>{budgets.map((budget) => <option key={budget}>{budget}</option>)}</select><ErrorText name="budget" errors={errors} /></label>
     </div>
     <label>Project timeline<select name="timeline" required defaultValue="" aria-invalid={Boolean(errors.timeline)}><option value="" disabled>Select a timeline</option>{timelines.map((timeline) => <option key={timeline}>{timeline}</option>)}</select><ErrorText name="timeline" errors={errors} /></label>
     <label>Main business problem<textarea name="challenge" required rows={6} placeholder="What happens today when a customer inquires, books, orders, or needs support?" aria-invalid={Boolean(errors.challenge)} /><ErrorText name="challenge" errors={errors} /></label>

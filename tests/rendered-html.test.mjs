@@ -15,6 +15,8 @@ test("renders the Northstar homepage", async () => {
   assert.match(html, /One connected system/);
   assert.match(html, /Product demonstration/i);
   assert.match(html, /Complete Business System/);
+  assert.match(html, /Built for how your business operates/);
+  assert.doesNotMatch(html, /₱(?:25|40|45|75)k/i);
   assert.match(html, /Northstar Systems/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/);
 });

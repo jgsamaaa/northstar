@@ -7,7 +7,10 @@ export const contactSchema = z.object({
   phone: z.string().trim().min(7, "Enter a phone or Messenger contact.").max(80),
   city: z.string().trim().min(2, "Enter your city or province.").max(100),
   industry: z.string({ error: "Select an industry." }).trim().min(2, "Select an industry.").max(120),
-  currentWebsite: z.string().trim().max(300).optional().default(""),
+  currentWebsite: z.string().trim().max(300).refine(
+    (value) => value === "" || URL.canParse(value),
+    "Enter a complete website or Facebook page URL.",
+  ).optional().default(""),
   services: z.string().trim().min(2, "Select the service you need.").max(120),
   budget: z.string().trim().max(80).optional().default(""),
   timeline: z.string().trim().max(80).optional().default(""),

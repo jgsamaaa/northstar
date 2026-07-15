@@ -54,7 +54,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         "@id": "/#organization",
         name: siteConfig.name,
         description: siteConfig.description,
-        email: siteConfig.email,
+        ...(siteConfig.emailConfigured ? { email: siteConfig.email } : {}),
         areaServed: { "@type": "Country", name: "Philippines" },
       },
       {
@@ -62,7 +62,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         "@id": "/#business",
         name: siteConfig.name,
         description: siteConfig.description,
-        email: siteConfig.email,
+        ...(siteConfig.emailConfigured ? { email: siteConfig.email } : {}),
         areaServed: { "@type": "Country", name: "Philippines" },
         serviceType: ["Business websites", "Online booking systems", "POS and inventory implementation", "AI customer assistance", "Business automation"],
       },

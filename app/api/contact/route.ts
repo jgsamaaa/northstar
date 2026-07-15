@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
       console.warn("Northstar contact delivery is disabled. Set RESEND_API_KEY and CONTACT_TO_EMAIL.");
     }
     return NextResponse.json(
-      { ok: false, message: "Email delivery is not configured yet. Please email hello@northstarsystems.ph directly." },
+      { ok: false, message: "Inquiry delivery is not available right now. Please try again later." },
       { status: 503 },
     );
   }
@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
   const rows = [
     ["Name", input.name], ["Business", input.business], ["Email", input.email], ["Phone / Messenger", input.phone],
     ["City", input.city], ["Industry", input.industry], ["Current site / page", input.currentWebsite || "Not provided"],
-    ["Services", input.services], ["Budget", input.budget], ["Timeline", input.timeline], ["Business challenge", input.challenge],
+    ["Services", input.services], ["Estimated investment", input.budget || "Not provided"], ["Preferred timeline", input.timeline || "Not provided"], ["Business challenge", input.challenge],
   ];
 
   const resend = new Resend(apiKey);
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
   if (result.error) {
     console.error("Resend contact delivery failed:", result.error.name);
     return NextResponse.json(
-      { ok: false, message: "We could not send your request right now. Please email hello@northstarsystems.ph directly." },
+      { ok: false, message: "We could not send your request right now. Please try again later." },
       { status: 502 },
     );
   }

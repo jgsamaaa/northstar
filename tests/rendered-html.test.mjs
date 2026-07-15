@@ -16,7 +16,11 @@ test("renders the Northstar homepage", async () => {
   assert.match(html, /Product demonstration/i);
   assert.match(html, /Complete Business System/);
   assert.match(html, /Built for how your business operates/);
+  assert.match(html, /Everything your business needs to operate online/);
+  assert.match(html, /What the free systems audit includes/);
+  assert.equal((html.match(/Reduce scheduling calls/g) || []).length, 1);
   assert.doesNotMatch(html, /₱(?:25|40|45|75)k/i);
+  assert.doesNotMatch(html, /future founder photograph|replace with James|portrait placeholder/i);
   assert.match(html, /Northstar Systems/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/);
 });
@@ -59,7 +63,7 @@ test("does not fake contact success when email delivery is unconfigured", async 
     body: JSON.stringify({
       name: "Juan Dela Cruz", business: "North Test", email: "juan@example.com", phone: "+639171234567",
       city: "Cebu City", industry: "Retail businesses", currentWebsite: "", services: "Website",
-      budget: "₱30,000–₱60,000", timeline: "Within 1–2 months",
+      budget: "", timeline: "",
       challenge: "We need a clearer website inquiry and inventory workflow.", consent: true, companyWebsite: "",
     }),
   });

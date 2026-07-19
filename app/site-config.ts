@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "Northstar Systems",
-  founderName: "James Dumaug",
+  founderName: "James Gabriel",
   tagline: "Modern systems for growing businesses.",
   description:
     "Connected websites, booking, POS and inventory implementation, AI assistance, and automation for Philippine businesses.",

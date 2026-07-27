@@ -45,6 +45,16 @@ test("renders every public route without broken internal pages", async () => {
   }
 });
 
+test("keeps the Northstar story separate from the founder story", async () => {
+  const response = await request("/about");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /ABOUT NORTHSTAR SYSTEMS/);
+  assert.match(html, /Practical digital systems built to help Philippine businesses move forward/);
+  assert.match(html, /The goal is not to add more software for its own sake/);
+  assert.equal((html.match(/James Gabriel is a U\.S\. Navy veteran/g) || []).length, 1);
+});
+
 test("serves SEO discovery files", async () => {
   const [robots, sitemap] = await Promise.all([request("/robots.txt"), request("/sitemap.xml")]);
   assert.equal(robots.status, 200);

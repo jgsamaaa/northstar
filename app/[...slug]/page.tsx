@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     industries: { title: "Industry Solutions", description: "Connected digital systems for clinics, salons, resorts, restaurants, retail businesses, and rental companies in the Philippines." },
     "how-it-works": { title: "How Northstar Projects Work", description: "A clear process for discovery, design, implementation, testing, training, launch, and ongoing support." },
     packages: { title: "Northstar Solution Packages", description: "Practical website, booking, POS and inventory, AI assistance, and complete business system packages for Philippine businesses." },
-    about: { title: "About Northstar Systems and James Gabriel", description: "Founded by U.S. Navy veteran and web developer James Gabriel to help Philippine businesses build a stronger online presence." },
+    about: { title: "About Northstar Systems", description: "Northstar Systems builds practical digital systems that help Philippine businesses strengthen their online presence and operate with more clarity." },
     contact: { title: "Book a Free Systems Audit", description: "Tell Northstar Systems how your business handles customers, bookings, sales, and inventory, and get a practical place to start." },
     privacy: { title: "Privacy Policy", description: "How Northstar Systems handles information shared through this website." },
     terms: { title: "Terms of Service", description: "The terms governing use of the Northstar Systems website and future client engagements." },

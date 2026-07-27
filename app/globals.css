@@ -310,9 +310,9 @@ svg { flex:none; }
 
 /* Founder and founding */
 .founder-section { min-height:700px; display:grid; grid-template-columns:.82fr 1.18fr; background:var(--paper); color:var(--ink); }
-.founder-portrait { min-height:700px; background:#091523; color:white; position:relative; overflow:hidden; }
-.founder-portrait:before { content:""; position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(180deg,transparent 68%,rgba(4,12,21,.2)); }
-.founder-image { object-fit:cover; object-position:50% 30%; }
+.founder-portrait { min-height:700px; background:linear-gradient(rgba(5,13,22,.42),rgba(5,13,22,.42)),url("/founder-james-gabriel.jpeg") center/cover no-repeat; color:white; position:relative; overflow:hidden; }
+.founder-portrait:before { content:""; position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(180deg,rgba(4,12,21,.08),rgba(4,12,21,.28)); }
+.founder-image { object-fit:contain; object-position:center; transform:scale(.94); filter:drop-shadow(0 18px 44px rgba(0,0,0,.28)); }
 .founder-monogram { width:220px; height:220px; position:relative; border:1px solid rgba(111,163,231,.28); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px; transform:rotate(45deg); background:rgba(111,163,231,.025); }
 .founder-monogram>* { transform:rotate(-45deg); }
 .founder-monogram i { width:54px; height:1px; background:var(--blue); }
@@ -323,6 +323,8 @@ svg { flex:none; }
 .founder-name { margin-top:28px; display:flex; flex-direction:column; gap:5px; }
 .founder-name b { font-size:18px; }
 .founder-name span { color:var(--blue-deep); font-size:15px; }
+.founder-credentials { margin-top:28px; padding-top:22px; display:flex; flex-wrap:wrap; gap:9px; border-top:1px solid var(--line-ink); }
+.founder-credentials span { padding:9px 12px; border:1px solid var(--line-ink); color:var(--blue-deep); font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
 .founder-principles { margin-top:38px; padding-top:24px; border-top:1px solid var(--line-ink); display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
 .founder-principles span { font-size:15px; line-height:1.5; }
 .founding-section { padding:116px max(28px,calc((100vw - 1320px)/2)); background:linear-gradient(120deg,#0c1e32,#07101b); }
@@ -425,6 +427,9 @@ svg { flex:none; }
 .industry-cards p { color:var(--muted); font-size:17px; line-height:1.65; }
 .about-story { display:grid; grid-template-columns:1fr 1fr; gap:90px; }
 .about-founder { border-top:1px solid var(--line-ink); }
+.standalone-packages { border-top:1px solid var(--line-ink); }
+.standalone-packages .packages-grid { margin-top:0; }
+.process-page { border-top:1px solid var(--line); }
 .final-cta { padding:100px max(28px,calc((100vw - 1320px)/2)); background:linear-gradient(115deg,#163756,#091522); }
 .final-cta h2 { max-width:950px; margin:22px 0; font:500 clamp(52px,5.3vw,74px)/.98 var(--display); }
 .final-cta p { color:var(--muted-light); font-size:18px; }
@@ -547,7 +552,7 @@ svg { flex:none; }
   .process-list p { font-size:16px; }
   .founder-section { min-height:0; grid-template-columns:1fr; }
   .founder-portrait { min-height:460px; }
-  .founder-image { object-position:50% 27%; }
+  .founder-image { object-position:center; transform:scale(.96); }
   .founder-monogram { width:170px; height:170px; }
   .founder-copy { padding:72px 20px; }
   .founder-copy blockquote { font-size:44px; }

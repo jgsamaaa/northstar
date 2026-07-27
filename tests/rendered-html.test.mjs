@@ -22,6 +22,9 @@ test("renders the Northstar homepage", async () => {
   assert.equal((html.match(/See what the audit includes/g) || []).length, 1);
   assert.match(html, /Let(?:â€™|’)s find the clearest place to start/);
   assert.match(html, /Request a Free Systems Audit/);
+  assert.match(html, /U\.S\. Navy veteran/);
+  assert.match(html, /best systems do more than make a business look modern/i);
+  assert.match(html, /href="\/contact"/);
   assert.doesNotMatch(html, /What happens next/);
   assert.doesNotMatch(html, /Step 1 of 2|Estimated project investment|Preferred project timeline/);
   assert.equal((html.match(/Reduce scheduling calls/g) || []).length, 1);
@@ -32,7 +35,7 @@ test("renders the Northstar homepage", async () => {
 });
 
 test("renders every public route without broken internal pages", async () => {
-  const routes = ["/services", "/services/websites", "/services/booking", "/services/pos-inventory", "/services/ai-automation", "/services/automation-integrations", "/services/support-maintenance", "/industries", "/about", "/contact", "/privacy", "/terms"];
+  const routes = ["/services", "/services/websites", "/services/booking", "/services/pos-inventory", "/services/ai-automation", "/services/automation-integrations", "/services/support-maintenance", "/industries", "/how-it-works", "/packages", "/about", "/contact", "/privacy", "/terms"];
   for (const route of routes) {
     const response = await request(route);
     assert.equal(response.status, 200, route);
@@ -47,7 +50,10 @@ test("serves SEO discovery files", async () => {
   assert.equal(robots.status, 200);
   assert.match(await robots.text(), /sitemap/i);
   assert.equal(sitemap.status, 200);
-  assert.match(await sitemap.text(), /services\/booking/);
+  const sitemapText = await sitemap.text();
+  assert.match(sitemapText, /services\/booking/);
+  assert.match(sitemapText, /how-it-works/);
+  assert.match(sitemapText, /packages/);
 });
 
 test("rejects invalid contact submissions server-side", async () => {

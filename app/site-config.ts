@@ -10,7 +10,7 @@ export const siteConfig = {
   messengerLink: "" as string,
   location: "Serving businesses across the Philippines",
   domain: "https://northstar-three-liard.vercel.app",
-  systemsAuditLink: "/#contact",
+  systemsAuditLink: "/contact",
   socialLinks: {
     facebook: "" as string,
     instagram: "" as string,

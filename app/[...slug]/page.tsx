@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { ContentPage } from "../site";
 import { services } from "../site-data";
 
-const valid = new Set(["services", "services/websites", "services/booking", "services/pos-inventory", "services/ai-automation", "services/automation-integrations", "services/support-maintenance", "industries", "about", "contact", "privacy", "terms"]);
+const valid = new Set(["services", "services/websites", "services/booking", "services/pos-inventory", "services/ai-automation", "services/automation-integrations", "services/support-maintenance", "industries", "how-it-works", "packages", "about", "contact", "privacy", "terms"]);
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string[] }> }): Promise<Metadata> {
   const path = (await params).slug.join("/");
@@ -11,7 +11,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const pageDetails: Record<string, { title: string; description: string }> = {
     services: { title: "Business Systems and Services", description: "Websites, online booking, POS and inventory implementation, AI assistance, and automation for Philippine businesses." },
     industries: { title: "Industry Solutions", description: "Connected digital systems for clinics, salons, resorts, restaurants, retail businesses, and rental companies in the Philippines." },
-    about: { title: "About Northstar Systems", description: "A technology implementation and systems partner helping Philippine businesses operate with more clarity." },
+    "how-it-works": { title: "How Northstar Projects Work", description: "A clear process for discovery, design, implementation, testing, training, launch, and ongoing support." },
+    packages: { title: "Northstar Solution Packages", description: "Practical website, booking, POS and inventory, AI assistance, and complete business system packages for Philippine businesses." },
+    about: { title: "About Northstar Systems and James Gabriel", description: "Founded by U.S. Navy veteran and web developer James Gabriel to help Philippine businesses build a stronger online presence." },
     contact: { title: "Book a Free Systems Audit", description: "Tell Northstar Systems how your business handles customers, bookings, sales, and inventory, and get a practical place to start." },
     privacy: { title: "Privacy Policy", description: "How Northstar Systems handles information shared through this website." },
     terms: { title: "Terms of Service", description: "The terms governing use of the Northstar Systems website and future client engagements." },

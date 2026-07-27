@@ -310,7 +310,7 @@ svg { flex:none; }
 
 /* Founder and founding */
 .founder-section { min-height:700px; display:grid; grid-template-columns:.82fr 1.18fr; background:var(--paper); color:var(--ink); }
-.founder-portrait { min-height:700px; background:linear-gradient(rgba(5,13,22,.42),rgba(5,13,22,.42)),url("/founder-james-gabriel.jpeg") center/cover no-repeat; color:white; position:relative; overflow:hidden; }
+.founder-portrait { min-height:700px; background:radial-gradient(circle at 50% 28%,#34383d 0,#181c21 52%,#09111b 100%); color:white; position:relative; overflow:hidden; }
 .founder-portrait:before { content:""; position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(180deg,rgba(4,12,21,.08),rgba(4,12,21,.28)); }
 .founder-image { object-fit:contain; object-position:center; transform:scale(.94); filter:drop-shadow(0 18px 44px rgba(0,0,0,.28)); }
 .founder-monogram { width:220px; height:220px; position:relative; border:1px solid rgba(111,163,231,.28); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px; transform:rotate(45deg); background:rgba(111,163,231,.025); }

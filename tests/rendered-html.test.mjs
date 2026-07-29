@@ -24,8 +24,6 @@ test("renders a focused, credible Northstar homepage", async () => {
   assert.match(html, /Northstar FleetOps/);
   assert.match(html, /A clear process, without the usual agency fog/);
   assert.match(html, /Request a Free Systems Audit/);
-  assert.match(html, /U\.S\. Navy veteran/);
-  assert.match(html, /best systems do more than make a business look modern/i);
   assert.match(html, /href="\/services\/websites"/);
   assert.match(html, /href="\/industries"/);
   assert.match(html, /href="\/projects"/);
@@ -66,14 +64,19 @@ test("renders an honest, data-driven project index", async () => {
   assert.doesNotMatch(html, /increased revenue|conversion rate|trusted by/i);
 });
 
-test("keeps the Northstar story separate from the founder story", async () => {
-  const response = await request("/about");
-  assert.equal(response.status, 200);
-  const html = await response.text();
+test("keeps personal founder identity off public pages", async () => {
+  for (const path of ["/", "/about"]) {
+    const response = await request(path);
+    assert.equal(response.status, 200, path);
+    const html = await response.text();
+    assert.doesNotMatch(html, /James Gabriel|FROM THE FOUNDER|founder-james-gabriel\.jpeg/i, path);
+  }
+
+  const about = await request("/about");
+  const html = await about.text();
   assert.match(html, /ABOUT NORTHSTAR SYSTEMS/);
   assert.match(html, /Practical digital systems built to help Philippine businesses move forward/);
   assert.match(html, /The goal is not to add more software for its own sake/);
-  assert.equal((html.match(/James Gabriel is a U\.S\. Navy veteran/g) || []).length, 1);
 });
 
 test("serves SEO discovery files", async () => {

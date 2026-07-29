@@ -5,17 +5,66 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Bot, CalendarDays, Check, CheckCircle2, ChevronDown, Headphones, Mail, MessageCircle, MonitorSmartphone, PackageSearch, Phone, ShieldCheck, Store, Workflow } from "lucide-react";
+import { ArrowRight, CalendarDays, Check, CheckCircle2, ChevronDown, Mail, MessageCircle, MonitorSmartphone, Phone, ShieldCheck, Workflow } from "lucide-react";
 import { ContactForm } from "./contact-form";
-import { IndustrySelector, ProductDemo } from "./interactive-sections";
+import { ProductDemo } from "./interactive-sections";
 import { Logo } from "./logo";
 import { siteConfig } from "./site-config";
-import { commerceDisclaimer, industries, packages, process, services } from "./site-data";
+import { commerceDisclaimer, industries, packages, process, projects, services, type Project } from "./site-data";
 
-const serviceIcons = [MonitorSmartphone, CalendarDays, Store, Bot, Workflow, Headphones];
+const homeOffers = [
+  {
+    eyebrow: "THE CORE OFFER",
+    title: "Website design and development",
+    copy: "A fast, credible website that explains your value, builds trust, and gives every visitor a clear next step.",
+    features: ["Custom responsive design", "Conversion-focused service pages", "Inquiry, call, map, and Messenger connections"],
+    href: "/services/websites",
+    cta: "Explore website services",
+    Icon: MonitorSmartphone,
+  },
+  {
+    eyebrow: "CONNECT THE WORKFLOW",
+    title: "Booking and business operations",
+    copy: "Connect customer inquiries with scheduling, deposits, sales, inventory, and the records your team uses every day.",
+    features: ["Online booking and availability", "POS and inventory implementation", "Clear customer and staff handoffs"],
+    href: "/services/booking",
+    cta: "Explore booking systems",
+    Icon: CalendarDays,
+  },
+  {
+    eyebrow: "GROW WITH CONTROL",
+    title: "Automation and ongoing support",
+    copy: "Reduce repetitive work with practical automation, controlled AI assistance, training, and support after launch.",
+    features: ["Workflow automation", "AI assistance with human handoff", "Maintenance, training, and support"],
+    href: "/services/automation-integrations",
+    cta: "Explore automation",
+    Icon: Workflow,
+  },
+] as const;
+
+const homeStandards = [
+  ["01", "Clear scope", "Know what is being built, what it costs, and what happens next."],
+  ["02", "Working handover", "Receive access, documentation, training, and tested customer flows."],
+  ["03", "No hidden provider costs", "Third-party subscriptions and hardware are explained before approval."],
+  ["04", "Support after launch", "Launch is a handover, not the end of the relationship."],
+] as const;
+
+const homeProcess = [
+  ["01", "Understand the business", "We identify the customer journey, the staff workflow, and the one problem worth fixing first."],
+  ["02", "Design and build the right system", "You review the structure and key decisions before implementation moves forward."],
+  ["03", "Test, train, and launch", "We test the real workflow, prepare your team, and hand over a system you can operate."],
+] as const;
+
+const conversationTrust = ["Free 20–30 minute discovery call", "Clear recommendation with no obligation", "Written proposal only if the project is a good fit"];
+const founderQuote = "The best systems do more than make a business look modern—they make it easier to trust, easier to run, and ready to grow.";
+const founderBio = [
+  "James Gabriel is a U.S. Navy veteran and web developer whose professional background includes work for Facebook and Indeed.",
+  "Now an independent freelancer, he founded Northstar Systems to help Philippine businesses strengthen their online presence and connect the digital tools behind a better customer experience.",
+];
+const founderCredentials = ["U.S. Navy Veteran", "Facebook", "Indeed", "Independent Freelancer"];
 
 function Reveal({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <motion.div className={className} initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-70px" }} transition={{ duration: .55, ease: [.22, 1, .36, 1] }}>{children}</motion.div>;
+  return <motion.div className={className} initial={false} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-70px" }} transition={{ duration: .55, ease: [.22, 1, .36, 1] }}>{children}</motion.div>;
 }
 
 function Header() {
@@ -30,47 +79,20 @@ function Header() {
     window.addEventListener("keydown", onKeyDown);
     return () => { document.body.style.overflow = previousOverflow; window.removeEventListener("keydown", onKeyDown); };
   }, [open]);
-  const links = [["Services", "/services"], ["Industries", "/industries"], ["How It Works", "/how-it-works"], ["Packages", "/packages"], ["About", "/about"], ["Contact", "/contact"]];
+  const links = [["Services", "/services"], ["Projects", "/projects"], ["Industries", "/industries"], ["How It Works", "/how-it-works"], ["Packages", "/packages"], ["About", "/about"], ["Contact", "/contact"]];
   return <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
     <Link href="/" className="logo-link" aria-label="Northstar Systems home"><Logo /></Link>
     <nav id="main-navigation" className={`main-nav ${open ? "is-open" : ""}`} aria-label="Main navigation">{links.map(([label, href]) => <Link key={label} href={href} onClick={() => setOpen(false)}>{label}</Link>)}<Link className="nav-cta" href={siteConfig.systemsAuditLink} onClick={() => setOpen(false)}>Book a Free Systems Audit</Link></nav>
-    <button className="menu-button" onClick={() => setOpen(!open)} aria-controls="main-navigation" aria-expanded={open} aria-label={open ? "Close navigation" : "Open navigation"}><span/><span/></button>
+    <button type="button" className="menu-button" onClick={() => setOpen(!open)} aria-controls="main-navigation" aria-expanded={open} aria-label={open ? "Close navigation" : "Open navigation"}><span/><span/></button>
   </header>;
 }
 
 function Footer() {
-  return <footer className="site-footer"><div className="footer-top"><div><Logo/><p>Connected digital systems for Philippine businesses.</p></div><div><span>Explore</span><Link href="/services">Services</Link><Link href="/industries">Industries</Link><Link href="/how-it-works">How It Works</Link><Link href="/packages">Packages</Link></div><div><span>Start</span><Link href={siteConfig.systemsAuditLink}>Book a free systems audit</Link>{siteConfig.emailConfigured&&<a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>}</div></div><p className="footer-disclaimer">Northstar Systems provides technology implementation, integration, and support. Third-party software, hardware, subscriptions, accreditation, and tax requirements depend on the selected provider and client circumstances.</p><div className="footer-bottom"><small>© 2026 {siteConfig.name} · Philippines</small><div><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link></div></div></footer>;
+  return <footer className="site-footer"><div className="footer-top"><div><Logo/><p>Websites and connected digital systems for Philippine businesses.</p></div><div><span>Explore</span><Link href="/services">Services</Link><Link href="/projects">Projects</Link><Link href="/industries">Industries</Link><Link href="/how-it-works">How It Works</Link><Link href="/packages">Packages</Link></div><div><span>Start</span><Link href={siteConfig.systemsAuditLink}>Book a free systems audit</Link>{siteConfig.emailConfigured&&<a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>}</div></div><p className="footer-disclaimer">Northstar Systems provides technology implementation, integration, and support. Third-party software, hardware, subscriptions, accreditation, and tax requirements depend on the selected provider and client circumstances.</p><div className="footer-bottom"><small>© 2026 {siteConfig.name} · Philippines</small><div><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link></div></div></footer>;
 }
 
 function Shell({ children }: { children: React.ReactNode }) { return <div className="site"><a className="skip-link" href="#main-content">Skip to content</a><Header/><main id="main-content">{children}</main><Footer/></div>; }
 function Eyebrow({ children }: { children: React.ReactNode }) { return <span className="eyebrow">{children}</span>; }
-const trustLaunch = ["A complete working website or configured system", "Admin access", "Staff training", "Written documentation", "Mobile and desktop testing", "Tested customer workflows", "Defined support period", "Clear third-party costs", "Secure account handover", "Client ownership of agreed accounts and assets"];
-const trustProtection = ["Written scope", "Defined milestones", "Clear payment schedule", "Client approval before launch", "No surprise third-party costs", "Secure credential handling", "Backups", "Documentation", "Post-launch support plan"];
-const auditPrimary = ["20–30 minute discovery call", "Review of your current workflow", "Recommended starting system"];
-const auditExpanded = ["Review of the highest-friction workflow", "Discussion of likely tools and integrations", "Recommended next step", "Explanation of the project process", "Clarification of likely third-party costs"];
-const conversationTrust = ["Free 20–30 minute discovery call", "Clear recommendation with no obligation", "Written proposal only if the project is a good fit"];
-const founderQuote = "The best systems do more than make a business look modern—they make it easier to trust, easier to run, and ready to grow.";
-const founderBio = [
-  "James Gabriel is a U.S. Navy veteran and web developer whose professional background includes work for Facebook and Indeed.",
-  "Now an independent freelancer, he founded Northstar Systems to help Philippine businesses strengthen their online presence and connect the digital tools behind a better customer experience.",
-];
-const founderCredentials = ["U.S. Navy Veteran", "Facebook", "Indeed", "Independent Freelancer"];
-
-function AuditDetails() {
-  return <div className="audit-details">
-    <h2>Find the clearest place to start.</h2>
-    <p className="audit-copy">In a short discovery call, we review how your business currently handles customers, bookings, sales, inventory, or inquiries—and recommend the most practical system to improve first.</p>
-    <ul className="audit-primary">{auditPrimary.map(item => <li key={item}><Check size={17} aria-hidden="true" />{item}</li>)}</ul>
-    <Link className="button primary audit-cta" href={siteConfig.systemsAuditLink}>Book a Free Systems Audit <ArrowRight size={18} /></Link>
-    <details className="audit-disclosure">
-      <summary>See what the audit includes <ChevronDown size={18} aria-hidden="true" /></summary>
-      <div className="audit-expanded">
-        <ul>{auditExpanded.map(item => <li key={item}><Check size={16} aria-hidden="true" />{item}</li>)}</ul>
-        <blockquote>The free audit does not include custom designs, full technical specifications, detailed automation mapping, software configuration, or implementation work.</blockquote>
-      </div>
-    </details>
-  </div>;
-}
 
 function FounderPortrait() {
   return <div className="founder-portrait"><Image className="founder-image" src="/founder-james-gabriel.jpeg" alt="James Gabriel, founder of Northstar Systems" fill unoptimized sizes="(max-width: 800px) 100vw, 45vw" /></div>;
@@ -94,15 +116,6 @@ function ContactIntro() {
   </Reveal>;
 }
 
-function ServicePreview({ index }: { index: number }) {
-  if (index === 0) return <div className="service-preview browser-preview"><div><i/><i/><i/></div><span>Northstar Studio</span><h4>Make your next move clear.</h4><button>Start a project</button></div>;
-  if (index === 1) return <div className="service-preview calendar-preview"><div className="mini-calendar"><span>MON</span><span>TUE</span><b>WED<br/>19</b><span>THU</span><span>FRI</span></div><div className="time-pills"><i>09:00</i><i className="active">10:30</i><i>13:00</i></div></div>;
-  if (index === 2) return <div className="service-preview inventory-preview"><div><PackageSearch/><span>Stock overview</span></div><strong>1,249</strong><small>items tracked</small><p><i/> Low stock · 3 items</p></div>;
-  if (index === 3) return <div className="service-preview message-preview"><span>How can I help today?</span><p>Check availability</p><p>Explore services</p><small>Human support available</small></div>;
-  if (index === 4) return <div className="service-preview workflow-preview"><b>New inquiry</b><ArrowRight/><b>Staff alert</b><ArrowRight/><b>Follow-up</b></div>;
-  return <div className="service-preview support-preview"><Headphones/><strong>Priority support</strong><span>Monitoring · Updates · Guidance</span></div>;
-}
-
 function PackagesContent() {
   return <>
     <div className="packages-grid">{packages.map((item, index) => <Reveal key={item.name}><article className={index === 3 ? "featured" : ""}><div className="package-label"><span>{item.tag}</span><b>0{index + 1}</b></div><h3>{item.name}</h3><div className="package-audience"><span>WHO IT IS FOR</span><p>{item.description}</p></div><p className="package-outcome">{item.outcome}</p><ul className="package-primary">{item.primary.map(feature => <li key={feature}><Check aria-hidden="true" />{feature}</li>)}</ul><details className="package-disclosure"><summary>View full scope <ChevronDown size={18} aria-hidden="true" /></summary><ul>{item.expanded.map(feature => <li key={feature}><Check aria-hidden="true" />{feature}</li>)}</ul></details><Link href="/contact">{item.cta}<ArrowRight/></Link></article></Reveal>)}</div>
@@ -114,31 +127,54 @@ function ProcessList() {
   return <div className="process-list">{process.map(([number, title, copy]) => <Reveal key={number}><article><span>{number}</span><div><h3>{title}</h3><p>{copy}</p></div></article></Reveal>)}</div>;
 }
 
+function ProjectVisual({ project }: { project: Project }) {
+  if (project.visual === "hospitality") return <div className="project-visual hospitality-visual" aria-hidden="true"><div className="project-browser-bar"><i/><i/><i/><span>ALOHABEACH.PH</span></div><div className="hospitality-scene"><span>DULAG · LEYTE</span><b>A quieter stay<br/>by the water.</b><i>PLAN YOUR STAY</i></div></div>;
+  return <div className="project-visual operations-visual" aria-hidden="true"><div className="project-browser-bar"><i/><i/><i/><span>FLEET OPERATIONS</span></div><div className="fleet-preview"><div><small>FLEET AVAILABILITY</small><strong>84%</strong><span>21 of 25 units ready</span></div><ul><li><i className="ready"/>Available <b>12</b></li><li><i className="active"/>Deployed <b>9</b></li><li><i className="repair"/>Under repair <b>4</b></li></ul></div></div>;
+}
+
+function ProjectCards({ compact = false }: { compact?: boolean }) {
+  return <div className={`project-grid ${compact ? "project-grid-compact" : ""}`}>{projects.map((project, index) => <Reveal key={project.slug}><article id={project.slug} style={{ "--project-accent": project.accent } as CSSProperties}><ProjectVisual project={project}/><div className="project-card-copy"><div className="project-meta"><span>{project.category}</span><span>{project.year}</span></div><h3>{project.name}</h3><p>{project.summary}</p><ul>{project.services.map(service => <li key={service}>{service}</li>)}</ul>{!compact&&<div className="project-outcome"><small>WHAT WAS DESIGNED</small><p>{project.outcome}</p></div>}<span className="project-status"><i/>{project.status}</span></div><span className="project-index">0{index + 1}</span></article></Reveal>)}</div>;
+}
+
 export function HomePage() {
   return <Shell>
     <section className="hero">
-      <div className="hero-image"><Image src="/northstar-horizon-v2.png" alt="A Philippine coastal city beneath the North Star" fill priority unoptimized sizes="100vw"/></div>
-      <div className="hero-content"><Reveal><Eyebrow>DIGITAL SYSTEMS FOR PHILIPPINE BUSINESSES</Eyebrow><h1>One connected system for your entire business.</h1><p>Northstar Systems builds your website, online booking, POS and inventory setup, AI customer assistant, and automation—then connects everything into one clear workflow.</p><div className="hero-actions"><Link className="button primary" href={siteConfig.systemsAuditLink}>Book a Free Systems Audit <ArrowRight size={19}/></Link><Link className="button secondary" href="#services">Explore Our Systems</Link></div><div className="service-line">Websites <i/> Online Booking <i/> POS & Inventory <i/> AI Assistance <i/> Automation <i/> Support</div></Reveal></div>
+      <div className="hero-image"><Image src="/northstar-horizon-v2.webp" alt="A Philippine coastal city beneath the North Star" fill priority sizes="100vw"/></div>
+      <div className="hero-content"><Reveal><Eyebrow>WEB DEVELOPMENT & CONNECTED SYSTEMS FOR PHILIPPINE BUSINESSES</Eyebrow><h1>Websites that help Philippine businesses earn trust and win more inquiries.</h1><p>Northstar designs and builds professional websites first, then connects booking, sales, inventory, customer support, and automation when the business needs more.</p><div className="hero-actions"><Link className="button primary" href={siteConfig.systemsAuditLink}>Book a Free Systems Audit <ArrowRight size={19}/></Link><Link className="button secondary" href="/services/websites">Explore Website Services</Link></div><div className="service-line">Web Design & Development <i/> Online Booking <i/> Business Systems <i/> Automation <i/> Support</div></Reveal></div>
     </section>
 
-    <section className="audit-scope-section"><Reveal><Eyebrow>FREE SYSTEMS AUDIT</Eyebrow><AuditDetails/></Reveal></section>
-
-    <section className="services-section" id="services"><Reveal className="section-title split-title"><div><Eyebrow>SIX CONNECTED CAPABILITIES</Eyebrow><h2>Everything your business needs to operate online.</h2></div><p>Start with one system or connect your website, bookings, sales, inventory, customer assistance, and support into one practical workflow.</p></Reveal>
-      <div className="service-list">{services.map((service, index) => { const Icon = serviceIcons[index]; return <Reveal key={service.slug}><article className={`service-row row-${index + 1}`}><div className="service-number">{service.code}</div><div className="service-copy"><div><Icon size={26}/><Eyebrow>{service.name}</Eyebrow></div><h3>{service.headline}</h3><p>{service.description}</p><ul>{service.features.slice(0, 4).map(item => <li key={item}><Check size={16}/>{item}</li>)}</ul><Link href={`/services/${service.slug}`}>Explore {service.name} <ArrowRight size={17}/></Link></div><ServicePreview index={index}/></article></Reveal>; })}</div>
+    <section className="home-offers" id="services">
+      <Reveal className="section-title split-title"><div><Eyebrow>START WITH WHAT MATTERS MOST</Eyebrow><h2>A professional website first. Connected systems when they make sense.</h2></div><p>You do not need every tool at once. Start with the clearest customer or operational problem, then expand from a solid foundation.</p></Reveal>
+      <div className="home-offer-grid">{homeOffers.map(({ eyebrow, title, copy, features, href, cta, Icon }, index) => <Reveal key={title}><article className={index === 0 ? "featured" : ""}><div className="home-offer-head"><span>0{index + 1}</span><Icon aria-hidden="true"/></div><small>{eyebrow}</small><h3>{title}</h3><p>{copy}</p><ul>{features.map(feature => <li key={feature}><Check size={16} aria-hidden="true"/>{feature}</li>)}</ul><Link href={href}>{cta}<ArrowRight size={17} aria-hidden="true"/></Link></article></Reveal>)}</div>
     </section>
 
     <ProductDemo/>
-    <IndustrySelector/>
 
-    <section className="trust-section"><Reveal className="section-title"><Eyebrow>CONFIDENCE BEFORE GO-LIVE</Eyebrow><h2>What you receive before launch</h2></Reveal><div className="trust-columns"><Reveal><article><div className="trust-index"><ShieldCheck/><span>DELIVERY STANDARD</span></div><ul>{trustLaunch.map((item,index) => <li key={item}><span>{String(index + 1).padStart(2,"0")}</span>{item}</li>)}</ul></article></Reveal><Reveal><article><div className="trust-index"><CheckCircle2/><span>HOW YOUR PROJECT IS PROTECTED</span></div><h3>Clear agreements before important decisions.</h3><ul>{trustProtection.map((item,index) => <li key={item}><span>{String(index + 1).padStart(2,"0")}</span>{item}</li>)}</ul></article></Reveal></div></section>
+    <section className="projects-section home-projects">
+      <Reveal className="section-title split-title"><div><Eyebrow>SELECTED PROJECTS</Eyebrow><h2>Real work, presented with honest context.</h2></div><p>Explore current Northstar projects across customer-facing websites and operational product systems.</p></Reveal>
+      <ProjectCards compact/>
+      <Link className="text-link" href="/projects">View all project details <ArrowRight size={17} aria-hidden="true"/></Link>
+    </section>
 
-    <section className="packages-section" id="packages"><Reveal className="section-title split-title"><div><Eyebrow>SOLUTION PACKAGES</Eyebrow><h2>A clear place to begin.</h2></div><p>Choose the closest starting point. Every system is then scoped around your actual workflow, team, locations, tools, and support needs.</p></Reveal><PackagesContent/></section>
+    <section className="home-industries">
+      <Reveal className="home-industries-copy"><Eyebrow>BUILT AROUND THE REAL WORKFLOW</Eyebrow><h2>Built for businesses where every customer handoff matters.</h2><p>Northstar adapts the system to the way your customers inquire, book, buy, and return. The tools follow the workflow, not the other way around.</p><div className="industry-chips">{industries.map(industry => <span key={industry.short}>{industry.short}</span>)}</div></Reveal>
+      <Reveal className="home-industries-actions"><Link className="button primary" href="/industries">Explore industry solutions <ArrowRight size={18}/></Link><Link className="text-link" href="/packages">Compare solution packages <ArrowRight size={17}/></Link></Reveal>
+    </section>
 
-    <section className="process-section" id="process"><Reveal className="section-title"><Eyebrow>HOW IT WORKS</Eyebrow><h2>From disconnected tools to one working system.</h2></Reveal><ProcessList/></section>
+    <section className="home-standards">
+      <Reveal className="section-title split-title"><div><Eyebrow>CONFIDENCE BEFORE GO-LIVE</Eyebrow><h2>Professional delivery is part of the product.</h2></div><p>A polished launch means little if the team cannot use the system or does not know what it owns.</p></Reveal>
+      <div className="home-standard-grid">{homeStandards.map(([number, title, copy]) => <Reveal key={number}><article><span>{number}</span><ShieldCheck aria-hidden="true"/><h3>{title}</h3><p>{copy}</p></article></Reveal>)}</div>
+    </section>
+
+    <section className="home-process">
+      <Reveal className="section-title split-title"><div><Eyebrow>HOW NORTHSTAR WORKS</Eyebrow><h2>A clear process, without the usual agency fog.</h2></div><p>You see the important decisions before they become expensive changes.</p></Reveal>
+      <div className="home-process-grid">{homeProcess.map(([number, title, copy]) => <Reveal key={number}><article><span>{number}</span><h3>{title}</h3><p>{copy}</p></article></Reveal>)}</div>
+      <Link className="text-link light" href="/how-it-works">See the full project process <ArrowRight size={17}/></Link>
+    </section>
 
     <section className="founder-section"><FounderPortrait/><Reveal className="founder-copy"><Eyebrow>FROM THE FOUNDER</Eyebrow><blockquote>“{founderQuote}”</blockquote><p>{founderBio.join(" ")}</p><div className="founder-name"><b>{siteConfig.founderName}</b><span>Founder, {siteConfig.name}</span></div><div className="founder-principles"><span>Practical before complicated</span><span>Connected before fragmented</span><span>Supported after launch</span></div></Reveal></section>
 
-    <section className="founding-section"><Reveal className="founding-head"><div><Eyebrow>FOUNDING CLIENT PROGRAM · 3 PHILIPPINE BUSINESSES</Eyebrow><h2>Become a Northstar founding client.</h2></div><p>We are accepting three founding clients so each project receives direct founder involvement, preferred launch terms, hands-on implementation, and priority support.</p></Reveal><div className="founding-grid"><ul>{["Limited to three Philippine businesses", "Direct founder involvement", "Priority implementation", "Preferred launch terms", "Staff training", "Launch support", "Portfolio and case-study permission required", "Testimonial requested only after successful delivery", "Defined project scope", "Limited revision rounds", "Third-party provider fees remain separate"].map(item => <li key={item}><CheckCircle2/>{item}</li>)}</ul><div><span>BUILT FOR A SERIOUS FIRST ENGAGEMENT</span><h3>Close collaboration, clear boundaries, and a system your team can operate.</h3><p>Applications are reviewed based on project fit, business readiness, communication, available content, and whether the requested system can be delivered successfully within the founding-client period.</p><Link className="button primary" href={siteConfig.systemsAuditLink}>Apply for the Founding Client Program <ArrowRight/></Link></div></div></section>
+    <section className="founding-section compact-founding"><Reveal className="founding-head"><div><Eyebrow>FOUNDING CLIENT PROGRAM</Eyebrow><h2>Build the first version with the founder at the table.</h2></div><p>Selected early clients receive direct founder involvement, preferred launch terms, hands-on implementation, and priority support.</p></Reveal><div className="founding-grid"><ul>{["Direct founder involvement", "Preferred launch terms", "Staff training and launch support", "Clear scope and provider costs"].map(item => <li key={item}><CheckCircle2 aria-hidden="true"/>{item}</li>)}</ul><div><span>FOR BUSINESSES READY TO PARTICIPATE</span><h3>A close working relationship, with clear boundaries on both sides.</h3><p>Northstar reviews each application for project fit, business readiness, available content, and a realistic path to a successful launch.</p><Link className="button primary" href={siteConfig.systemsAuditLink}>Ask about the founding client program <ArrowRight/></Link></div></div></section>
 
     <section className="home-contact" id="contact"><ContactIntro/><ContactForm/></section>
   </Shell>;
@@ -151,6 +187,7 @@ function ServiceStructuredData({ service }: { service: (typeof services)[number]
 export function ContentPage({ path }: { path: string }) {
   if (path === "services") return <Shell><PageHero eyebrow="CONNECTED CAPABILITIES" title="Systems that move your business forward." copy="Start with the system you need now, with a clear path to connect more when the business is ready."/><section className="page-services section-pad">{services.map(service => <article key={service.slug} style={{ "--accent": service.accent } as CSSProperties}><div><Eyebrow>{service.code} · {service.name}</Eyebrow><h2>{service.headline}</h2><p>{service.description}</p><Link href={`/services/${service.slug}`}>Explore the system <ArrowRight/></Link></div><ul>{service.features.map(feature => <li key={feature}><Check/>{feature}</li>)}</ul></article>)}</section><FinalCTA/></Shell>;
   if (path.startsWith("services/")) { const service = services.find(item => path.endsWith(item.slug)); if (!service) return <Shell><PageHero eyebrow="NOT FOUND" title="That system page is not here." copy="Explore our connected systems or book a free audit."/><FinalCTA/></Shell>; return <Shell><ServiceStructuredData service={service}/><PageHero eyebrow={service.name} title={service.headline} copy={service.description}/><section className="service-detail section-pad"><div><Eyebrow>WHAT’S INCLUDED</Eyebrow><h2>Built around your real customer and staff workflow.</h2><p>{service.slug === "pos-inventory" ? "We help select and implement an appropriate third-party platform, then connect it to the wider customer journey where supported integrations allow." : service.slug === "ai-automation" ? "Northstar Assist works within approved information and escalates to your team when human judgment is needed." : "The system is scoped, configured, tested, and explained to your team—not handed over as another tool to figure out."}</p></div><div className="detail-list">{service.features.map((feature, index) => <div key={feature}><span>{String(index + 1).padStart(2, "0")}</span><b>{feature}</b></div>)}</div>{service.slug === "pos-inventory" && <aside className="legal-note"><b>Important implementation note</b><p>{commerceDisclaimer}</p></aside>}</section><FinalCTA/></Shell>; }
+  if (path === "projects") return <Shell><PageHero eyebrow="SELECTED PROJECTS" title="Digital work designed around the real job." copy="A growing record of Northstar website concepts and product systems, with each project clearly labeled by its current stage."/><section className="projects-section projects-page"><Reveal className="section-title split-title"><div><Eyebrow>PROJECT INDEX</Eyebrow><h2>Different industries. The same standard of clarity.</h2></div><p>This collection will grow as new Northstar projects are approved for publication. No invented outcomes or client claims.</p></Reveal><ProjectCards/></section><FinalCTA/></Shell>;
   if (path === "industries") return <Shell><PageHero eyebrow="INDUSTRY SOLUTIONS" title="Built for how your business operates." copy="Northstar adapts to your staff, resources, customers, and operating rules."/><section className="industry-cards section-pad">{industries.map((item, index) => <article key={item.name}><span>0{index + 1}</span><h2>{item.name}</h2><p>{item.problem}</p><div className="recommended-system"><small>RECOMMENDED SYSTEM</small><b>{item.system}</b></div><ul>{item.features.map(feature => <li key={feature}><Check/>{feature}</li>)}</ul></article>)}</section><FinalCTA/></Shell>;
   if (path === "how-it-works") return <Shell><PageHero eyebrow="HOW IT WORKS" title="A clear path from business problem to working system." copy="Every project moves through focused discovery, practical design, careful implementation, and a supported handover."/><section className="process-section process-page"><Reveal className="section-title split-title"><div><Eyebrow>THE NORTHSTAR PROCESS</Eyebrow><h2>Clarity at every step.</h2></div><p>You will know what is being built, why it matters, what it costs, and what your team needs before anything goes live.</p></Reveal><ProcessList/></section><FinalCTA/></Shell>;
   if (path === "packages") return <Shell><PageHero eyebrow="SOLUTION PACKAGES" title="Choose the clearest place to begin." copy="Start with the closest fit. Every package is then scoped around your workflow, team, locations, integrations, and support needs."/><section className="packages-section standalone-packages"><PackagesContent/></section><FinalCTA/></Shell>;

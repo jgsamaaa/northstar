@@ -20,6 +20,7 @@ Production website for Northstar Systems, a technology implementation and busine
 - `/services/booking`
 - `/services/pos-inventory`
 - `/services/ai-automation`
+- `/projects`
 - `/industries`
 - `/about`
 - `/contact`
@@ -53,7 +54,7 @@ Never commit real credentials. The default Resend sender is suitable only for in
 
 ## Editing content
 
-- Core services, industries, packages, process, and FAQs: `app/site-data.ts`
+- Core services, projects, industries, packages, process, and FAQs: `app/site-data.ts`
 - Public contact details and social placeholders: `app/site-config.ts`
 - Main page sections and shared layout: `app/site.tsx`
 - Contact form fields and client states: `app/contact-form.tsx`

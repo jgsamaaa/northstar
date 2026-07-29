@@ -8,34 +8,43 @@ async function request(path = "/", init = {}) {
   return worker.fetch(new Request(`http://localhost${path}`, { headers: { accept: "text/html", ...init.headers }, ...init }), { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } }, { waitUntil() {}, passThroughOnException() {} });
 }
 
-test("renders the Northstar homepage", async () => {
+test("renders a focused, credible Northstar homepage", async () => {
   const response = await request();
   assert.equal(response.status, 200);
   const html = await response.text();
-  assert.match(html, /One connected system/);
+
+  assert.match(html, /Websites that help Philippine businesses earn trust and win more inquiries/);
+  assert.match(html, /Website design and development/);
+  assert.match(html, /Booking and business operations/);
+  assert.match(html, /Automation and ongoing support/);
   assert.match(html, /Product demonstration/i);
-  assert.match(html, /Complete Business System/);
-  assert.match(html, /Built for how your business operates/);
-  assert.match(html, /Everything your business needs to operate online/);
-  assert.match(html, /Find the clearest place to start/);
-  assert.match(html, /See what the audit includes/);
-  assert.equal((html.match(/See what the audit includes/g) || []).length, 1);
-  assert.match(html, /Let(?:â€™|’)s find the clearest place to start/);
+  assert.match(html, /Built for businesses where every customer handoff matters/);
+  assert.match(html, /Real work, presented with honest context/);
+  assert.match(html, /Aloha Beach Resort/);
+  assert.match(html, /Northstar FleetOps/);
+  assert.match(html, /A clear process, without the usual agency fog/);
   assert.match(html, /Request a Free Systems Audit/);
   assert.match(html, /U\.S\. Navy veteran/);
   assert.match(html, /best systems do more than make a business look modern/i);
+  assert.match(html, /href="\/services\/websites"/);
+  assert.match(html, /href="\/industries"/);
+  assert.match(html, /href="\/projects"/);
+  assert.match(html, /href="\/packages"/);
   assert.match(html, /href="\/contact"/);
+
+  assert.doesNotMatch(html, /EARLY CLIENT FEEDBACK|Mara L\.|Paolo R\.|Denise C\.|temporary launch copy/);
+  assert.doesNotMatch(html, /Everything your business needs to operate online/);
+  assert.doesNotMatch(html, /Complete Business System/);
+  assert.doesNotMatch(html, /FOUNDING CLIENT PROGRAM · 3 PHILIPPINE BUSINESSES/);
   assert.doesNotMatch(html, /What happens next/);
   assert.doesNotMatch(html, /Step 1 of 2|Estimated project investment|Preferred project timeline/);
-  assert.equal((html.match(/Reduce scheduling calls/g) || []).length, 1);
   assert.doesNotMatch(html, /₱(?:25|40|45|75)k/i);
   assert.doesNotMatch(html, /future founder photograph|replace with James|portrait placeholder/i);
-  assert.match(html, /Northstar Systems/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/);
 });
 
 test("renders every public route without broken internal pages", async () => {
-  const routes = ["/services", "/services/websites", "/services/booking", "/services/pos-inventory", "/services/ai-automation", "/services/automation-integrations", "/services/support-maintenance", "/industries", "/how-it-works", "/packages", "/about", "/contact", "/privacy", "/terms"];
+  const routes = ["/services", "/services/websites", "/services/booking", "/services/pos-inventory", "/services/ai-automation", "/services/automation-integrations", "/services/support-maintenance", "/projects", "/industries", "/how-it-works", "/packages", "/about", "/contact", "/privacy", "/terms"];
   for (const route of routes) {
     const response = await request(route);
     assert.equal(response.status, 200, route);
@@ -43,6 +52,18 @@ test("renders every public route without broken internal pages", async () => {
     assert.match(html, /Northstar Systems/, route);
     assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/, route);
   }
+});
+
+test("renders an honest, data-driven project index", async () => {
+  const response = await request("/projects");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /Aloha Beach Resort/);
+  assert.match(html, /Presentation-ready concept/);
+  assert.match(html, /Northstar FleetOps/);
+  assert.match(html, /In development/);
+  assert.match(html, /No invented outcomes or client claims/);
+  assert.doesNotMatch(html, /increased revenue|conversion rate|trusted by/i);
 });
 
 test("keeps the Northstar story separate from the founder story", async () => {
@@ -64,6 +85,7 @@ test("serves SEO discovery files", async () => {
   assert.match(sitemapText, /services\/booking/);
   assert.match(sitemapText, /how-it-works/);
   assert.match(sitemapText, /packages/);
+  assert.match(sitemapText, /projects/);
 });
 
 test("rejects invalid contact submissions server-side", async () => {

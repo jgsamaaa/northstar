@@ -38,9 +38,9 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Northstar Systems — Better business, by design",
       description: siteConfig.tagline,
       url: "/",
-      images: [{ url: "/northstar-horizon-v2.png", width: 1672, height: 938, alt: "Northstar Systems — modern systems for growing Philippine businesses" }],
+      images: [{ url: "/northstar-social.jpg", width: 1200, height: 675, alt: "Northstar Systems — modern systems for growing Philippine businesses" }],
     },
-    twitter: { card: "summary_large_image", title: siteConfig.name, description: siteConfig.tagline, images: ["/northstar-horizon-v2.png"] },
+    twitter: { card: "summary_large_image", title: siteConfig.name, description: siteConfig.tagline, images: ["/northstar-social.jpg"] },
     robots: { index: true, follow: true },
   };
 }

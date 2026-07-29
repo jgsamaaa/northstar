@@ -9,6 +9,46 @@ export type Service = {
   accent: string;
 };
 
+export type Project = {
+  slug: string;
+  name: string;
+  category: string;
+  status: string;
+  year: string;
+  summary: string;
+  outcome: string;
+  services: string[];
+  accent: string;
+  visual: "hospitality" | "operations";
+};
+
+export const projects: Project[] = [
+  {
+    slug: "aloha-beach-resort",
+    name: "Aloha Beach Resort",
+    category: "Hospitality website concept",
+    status: "Presentation-ready concept",
+    year: "2026",
+    summary: "A source-grounded resort website that turns public property information and authentic photography into a clearer direct-inquiry journey.",
+    outcome: "A responsive multi-page concept with room details, gallery, visitor guidance, and an honest inquiry handoff instead of a simulated booking engine.",
+    services: ["Web strategy", "Responsive design", "Content structure", "Inquiry UX"],
+    accent: "#d59268",
+    visual: "hospitality",
+  },
+  {
+    slug: "northstar-fleetops",
+    name: "Northstar FleetOps",
+    category: "Operations product platform",
+    status: "In development",
+    year: "2026",
+    summary: "A connected heavy-equipment operations platform for fleet status, repairs, parts inventory, purchasing, maintenance, inspections, and protected audit history.",
+    outcome: "A permission-aware product architecture designed to connect field reporting, maintenance work, inventory movements, purchasing, and official documents.",
+    services: ["Product design", "Full-stack development", "Workflow architecture", "Security design"],
+    accent: "#6fa3e7",
+    visual: "operations",
+  },
+];
+
 export const services: Service[] = [
   {
     slug: "websites", code: "01", name: "Northstar Web", label: "WEBSITES",

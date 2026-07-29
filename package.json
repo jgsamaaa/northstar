@@ -14,8 +14,8 @@
     "start:raw": "vinext start",
     "test": "node scripts/run-with-diagnostics.mjs test npm run test:raw",
     "test:raw": "vinext build && node --test tests/rendered-html.test.mjs",
-    "lint": "node scripts/run-with-diagnostics.mjs lint eslint . --ignore-pattern dist --ignore-pattern .next",
-    "lint:raw": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "lint": "node scripts/run-with-diagnostics.mjs lint eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern .diagnostics",
+    "lint:raw": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern .diagnostics",
     "db:generate": "drizzle-kit generate"
   },
   "dependencies": {

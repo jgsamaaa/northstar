@@ -3,13 +3,14 @@ import { notFound } from "next/navigation";
 import { ContentPage } from "../site";
 import { services } from "../site-data";
 
-const valid = new Set(["services", "services/websites", "services/booking", "services/pos-inventory", "services/ai-automation", "services/automation-integrations", "services/support-maintenance", "industries", "how-it-works", "packages", "about", "contact", "privacy", "terms"]);
+const valid = new Set(["services", "services/websites", "services/booking", "services/pos-inventory", "services/ai-automation", "services/automation-integrations", "services/support-maintenance", "projects", "industries", "how-it-works", "packages", "about", "contact", "privacy", "terms"]);
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string[] }> }): Promise<Metadata> {
   const path = (await params).slug.join("/");
   const service = path.startsWith("services/") ? services.find((item) => path.endsWith(item.slug)) : undefined;
   const pageDetails: Record<string, { title: string; description: string }> = {
     services: { title: "Business Systems and Services", description: "Websites, online booking, POS and inventory implementation, AI assistance, and automation for Philippine businesses." },
+    projects: { title: "Selected Projects", description: "Northstar Systems website concepts and product platforms, presented with clear project-stage context." },
     industries: { title: "Industry Solutions", description: "Connected digital systems for clinics, salons, resorts, restaurants, retail businesses, and rental companies in the Philippines." },
     "how-it-works": { title: "How Northstar Projects Work", description: "A clear process for discovery, design, implementation, testing, training, launch, and ongoing support." },
     packages: { title: "Northstar Solution Packages", description: "Practical website, booking, POS and inventory, AI assistance, and complete business system packages for Philippine businesses." },

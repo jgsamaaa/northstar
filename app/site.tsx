@@ -118,7 +118,14 @@ function ProcessList() {
 }
 
 function ProjectVisual({ project }: { project: Project }) {
-  return <a className="project-visual" href={project.href} target="_blank" rel="noreferrer" aria-label={`View ${project.name} live project`}><Image src={project.image} alt={`Desktop preview of ${project.name}`} fill sizes="(max-width: 760px) 100vw, 56vw"/></a>;
+  const projectHost = new URL(project.href).hostname;
+  return <a className="project-visual" href={project.href} target="_blank" rel="noreferrer" aria-label={`View ${project.name} live project`}>
+    <span className="project-preview-shell">
+      <span className="project-preview-bar" aria-hidden="true"><span><i/><i/><i/></span><b>{projectHost}</b><em>↗</em></span>
+      <span className="project-preview-image"><Image src={project.image} alt={`Homepage preview of ${project.name}`} fill sizes="(max-width: 760px) calc(100vw - 72px), 52vw"/></span>
+    </span>
+    <span className="project-preview-label" aria-hidden="true">LIVE WEBSITE PREVIEW</span>
+  </a>;
 }
 
 function ProjectCards({ compact = false }: { compact?: boolean }) {

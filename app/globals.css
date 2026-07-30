@@ -281,7 +281,10 @@ svg { flex:none; }
 .project-grid { margin-top:64px; display:grid; gap:28px; }
 .project-grid>div { min-width:0; }
 .project-grid article { min-height:600px; display:grid; grid-template-columns:1.12fr .88fr; position:relative; overflow:hidden; border:1px solid var(--line-ink); background:#f8f6f0; }
-.project-visual { min-height:600px; position:relative; overflow:hidden; background:#0b1521; color:white; }
+.project-visual { min-height:600px; position:relative; display:block; overflow:hidden; background:#0b1521; color:white; }
+.project-visual img { object-fit:cover; object-position:top center; transition:transform .45s ease; }
+.project-visual:hover img { transform:scale(1.015); }
+.project-visual:focus-visible { outline:3px solid var(--project-accent); outline-offset:-3px; }
 .project-browser-bar { height:52px; padding:0 18px; display:flex; align-items:center; gap:8px; position:relative; z-index:2; border-bottom:1px solid rgba(255,255,255,.16); background:rgba(6,13,22,.78); }
 .project-browser-bar>i { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,.36); }
 .project-browser-bar span { margin-left:auto; color:rgba(255,255,255,.66); font-size:11px; font-weight:700; letter-spacing:.15em; }
@@ -314,6 +317,10 @@ svg { flex:none; }
 .project-outcome p { margin:10px 0 0; color:var(--muted); font-size:15px; line-height:1.65; }
 .project-status { margin-top:auto; display:flex; align-items:center; gap:9px; color:#35465a; font-size:13px; font-weight:800; }
 .project-status i { width:8px; height:8px; border-radius:50%; background:var(--project-accent); box-shadow:0 0 0 4px color-mix(in srgb,var(--project-accent) 18%,transparent); }
+.project-live-link { margin-top:20px; display:inline-flex; align-items:center; gap:8px; color:var(--blue-deep); font-size:13px; font-weight:800; text-decoration:none; border-bottom:1px solid currentColor; padding-bottom:5px; }
+.project-live-link:hover svg { transform:translateX(3px); }
+.project-live-link svg { transition:transform .2s ease; }
+.project-live-link:focus-visible { outline:2px solid var(--blue-deep); outline-offset:4px; }
 .project-index { position:absolute; right:18px; bottom:12px; color:rgba(16,25,39,.12); font:500 66px/1 var(--display); }
 .project-grid-compact { grid-template-columns:repeat(2,1fr); gap:18px; }
 .project-grid-compact article { min-height:0; height:100%; grid-template-columns:1fr; }

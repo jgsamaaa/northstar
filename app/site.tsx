@@ -118,12 +118,13 @@ function ProcessList() {
 }
 
 function ProjectVisual({ project }: { project: Project }) {
-  if (project.visual === "hospitality") return <div className="project-visual hospitality-visual" aria-hidden="true"><div className="project-browser-bar"><i/><i/><i/><span>ALOHABEACH.PH</span></div><div className="hospitality-scene"><span>DULAG · LEYTE</span><b>A quieter stay<br/>by the water.</b><i>PLAN YOUR STAY</i></div></div>;
-  return <div className="project-visual operations-visual" aria-hidden="true"><div className="project-browser-bar"><i/><i/><i/><span>FLEET OPERATIONS</span></div><div className="fleet-preview"><div><small>FLEET AVAILABILITY</small><strong>84%</strong><span>21 of 25 units ready</span></div><ul><li><i className="ready"/>Available <b>12</b></li><li><i className="active"/>Deployed <b>9</b></li><li><i className="repair"/>Under repair <b>4</b></li></ul></div></div>;
+  return <a className="project-visual" href={project.href} target="_blank" rel="noreferrer" aria-label={`View ${project.name} live project`}><Image src={project.image} alt={`Desktop preview of ${project.name}`} fill sizes="(max-width: 760px) 100vw, 56vw"/></a>;
 }
 
 function ProjectCards({ compact = false }: { compact?: boolean }) {
-  return <div className={`project-grid ${compact ? "project-grid-compact" : ""}`}>{projects.map((project, index) => <Reveal key={project.slug}><article id={project.slug} style={{ "--project-accent": project.accent } as CSSProperties}><ProjectVisual project={project}/><div className="project-card-copy"><div className="project-meta"><span>{project.category}</span><span>{project.year}</span></div><h3>{project.name}</h3><p>{project.summary}</p><ul>{project.services.map(service => <li key={service}>{service}</li>)}</ul>{!compact&&<div className="project-outcome"><small>WHAT WAS DESIGNED</small><p>{project.outcome}</p></div>}<span className="project-status"><i/>{project.status}</span></div><span className="project-index">0{index + 1}</span></article></Reveal>)}</div>;
+  const featuredSlugs = ["top-asia", "dr-b-dental-clinic", "sight-expert-eye-care", "aloha-beach-resort"];
+  const visibleProjects = compact ? projects.filter((project) => featuredSlugs.includes(project.slug)) : projects;
+  return <div className={`project-grid ${compact ? "project-grid-compact" : ""}`}>{visibleProjects.map((project, index) => <Reveal key={project.slug}><article id={project.slug} style={{ "--project-accent": project.accent } as CSSProperties}><ProjectVisual project={project}/><div className="project-card-copy"><div className="project-meta"><span>{project.category}</span><span>{project.year}</span></div><h3>{project.name}</h3><p>{project.summary}</p><ul>{project.services.map(service => <li key={service}>{service}</li>)}</ul>{!compact&&<div className="project-outcome"><small>WHAT WAS DESIGNED</small><p>{project.outcome}</p></div>}<span className="project-status"><i/>{project.status}</span><a className="project-live-link" href={project.href} target="_blank" rel="noreferrer">View live project <ArrowRight size={17} aria-hidden="true"/></a></div><span className="project-index">0{index + 1}</span></article></Reveal>)}</div>;
 }
 
 export function HomePage() {

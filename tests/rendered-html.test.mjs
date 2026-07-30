@@ -21,7 +21,8 @@ test("renders a focused, credible Northstar homepage", async () => {
   assert.match(html, /Built for businesses where every customer handoff matters/);
   assert.match(html, /Real work, presented with honest context/);
   assert.match(html, /Aloha Beach Resort/);
-  assert.match(html, /Northstar FleetOps/);
+  assert.match(html, /TOP ASIA/);
+  assert.doesNotMatch(html, /Northstar FleetOps/);
   assert.match(html, /A clear process, without the usual agency fog/);
   assert.match(html, /Request a Free Systems Audit/);
   assert.match(html, /href="\/services\/websites"/);
@@ -56,12 +57,20 @@ test("renders an honest, data-driven project index", async () => {
   const response = await request("/projects");
   assert.equal(response.status, 200);
   const html = await response.text();
-  assert.match(html, /Aloha Beach Resort/);
-  assert.match(html, /Presentation-ready concept/);
-  assert.match(html, /Northstar FleetOps/);
-  assert.match(html, /In development/);
+  for (const project of [
+    ["TOP ASIA", "https://topasia.vercel.app/"],
+    ["Woodvelly", "https://nature1-sigma.vercel.app/"],
+    ["DR. B. Dental Clinic", "https://dentistb.vercel.app/"],
+    ["Sight Expert Eye Care Clinic", "https://eyesight-kappa.vercel.app/"],
+    ["Amihan Ridge", "https://amihan-six.vercel.app/"],
+    ["Aloha Beach Resort", "https://aloharesort.vercel.app/"],
+  ]) {
+    assert.match(html, new RegExp(project[0].replaceAll(".", "\\.")));
+    assert.match(html, new RegExp(project[1].replaceAll(".", "\\.")));
+  }
+  assert.match(html, /Live concept/);
   assert.match(html, /No invented outcomes or client claims/);
-  assert.doesNotMatch(html, /increased revenue|conversion rate|trusted by/i);
+  assert.doesNotMatch(html, /Northstar FleetOps|increased revenue|conversion rate|trusted by/i);
 });
 
 test("keeps personal founder identity off public pages", async () => {

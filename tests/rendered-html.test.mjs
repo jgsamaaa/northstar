@@ -101,6 +101,20 @@ test("rejects invalid AI chat submissions server-side", async () => {
   assert.equal(result.ok, false);
 });
 
+test("accepts bounded prior AI responses in multi-turn conversations", async () => {
+  const response = await request("/api/chat", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      messages: [
+        { role: "assistant", content: "A".repeat(1200) },
+        { role: "user", content: "What should I do next?" },
+      ],
+    }),
+  });
+  assert.notEqual(response.status, 400);
+});
+
 test("serves SEO discovery files", async () => {
   const [robots, sitemap] = await Promise.all([request("/robots.txt"), request("/sitemap.xml")]);
   assert.equal(robots.status, 200);

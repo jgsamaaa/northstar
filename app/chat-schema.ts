@@ -1,9 +1,15 @@
 import { z } from "zod";
 
-export const chatMessageSchema = z.object({
-  role: z.enum(["user", "assistant"]),
-  content: z.string().trim().min(1).max(600),
-});
+export const chatMessageSchema = z.discriminatedUnion("role", [
+  z.object({
+    role: z.literal("user"),
+    content: z.string().trim().min(1).max(600),
+  }),
+  z.object({
+    role: z.literal("assistant"),
+    content: z.string().trim().min(1).max(2400),
+  }),
+]);
 
 export const chatRequestSchema = z.object({
   messages: z.array(chatMessageSchema).min(1).max(10),

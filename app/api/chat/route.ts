@@ -100,7 +100,12 @@ export async function POST(request: NextRequest) {
     });
 
     if (!gatewayResponse.ok) {
-      console.error("AI Gateway request failed:", gatewayResponse.status);
+      const details = await gatewayResponse.json().catch(() => null) as { error?: { type?: string; message?: string } } | null;
+      console.error("AI Gateway request failed", {
+        status: gatewayResponse.status,
+        type: details?.error?.type || "unknown",
+        message: details?.error?.message?.slice(0, 300) || "No upstream message",
+      });
       return NextResponse.json({ ok: false, error: "The assistant could not respond right now. Please use the contact form." }, { status: 502 });
     }
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
+import { AiChat } from "./ai-chat";
 import { siteConfig } from "./site-config";
 import "./globals.css";
 
@@ -69,5 +70,5 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     ],
   };
 
-  return <html lang="en" className={`${displayFont.variable} ${bodyFont.variable}`}><body><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }} />{children}</body></html>;
+  return <html lang="en" className={`${displayFont.variable} ${bodyFont.variable}`}><body><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }} />{children}<AiChat/></body></html>;
 }

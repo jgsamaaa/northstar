@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Check } from "lucide-react";
 import { contactSchema } from "./contact-schema";
 
@@ -29,6 +29,16 @@ export function ContactForm() {
   const messageRef = useRef<HTMLParagraphElement>(null);
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [errors, setErrors] = useState<FieldErrors>({});
+
+  useEffect(() => {
+    const handoff = sessionStorage.getItem("northstar-chat-handoff");
+    if (!handoff || !formRef.current) return;
+    const challengeField = formRef.current.elements.namedItem("challenge");
+    if (challengeField instanceof HTMLTextAreaElement && !challengeField.value) {
+      challengeField.value = `AI assistant conversation summary (please review before sending):\n${handoff}`;
+    }
+    sessionStorage.removeItem("northstar-chat-handoff");
+  }, []);
   const errorProps = (name: string) => ({
     "aria-invalid": Boolean(errors[name]),
     "aria-describedby": errors[name] ? `${name}-error` : undefined,

@@ -79,6 +79,28 @@ test("keeps personal founder identity off public pages", async () => {
   assert.match(html, /The goal is not to add more software for its own sake/);
 });
 
+test("renders an accessible AI assistant launcher on every public page", async () => {
+  for (const path of ["/", "/projects", "/about", "/contact"]) {
+    const response = await request(path);
+    assert.equal(response.status, 200, path);
+    const html = await response.text();
+    assert.match(html, /Ask Northstar/, path);
+    assert.match(html, /aria-haspopup="dialog"/, path);
+    assert.match(html, /AI assistant/, path);
+  }
+});
+
+test("rejects invalid AI chat submissions server-side", async () => {
+  const response = await request("/api/chat", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ messages: [{ role: "user", content: "" }] }),
+  });
+  assert.equal(response.status, 400);
+  const result = await response.json();
+  assert.equal(result.ok, false);
+});
+
 test("serves SEO discovery files", async () => {
   const [robots, sitemap] = await Promise.all([request("/robots.txt"), request("/sitemap.xml")]);
   assert.equal(robots.status, 200);

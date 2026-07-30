@@ -1,0 +1,15 @@
+import { z } from "zod";
+
+export const chatMessageSchema = z.object({
+  role: z.enum(["user", "assistant"]),
+  content: z.string().trim().min(1).max(600),
+});
+
+export const chatRequestSchema = z.object({
+  messages: z.array(chatMessageSchema).min(1).max(10),
+}).refine((value) => value.messages[value.messages.length - 1]?.role === "user", {
+  message: "The final message must come from the visitor.",
+  path: ["messages"],
+});
+
+export type ChatMessage = z.infer<typeof chatMessageSchema>;

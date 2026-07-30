@@ -5,7 +5,7 @@ Production website for Northstar Systems, a technology implementation and busine
 ## What is included
 
 - Premium responsive marketing site with an animated connected-system visual
-- Interactive booking, commerce, and controlled AI-assistant demonstrations
+- Interactive booking and commerce demonstrations plus a grounded, production AI website assistant
 - Data-driven service, industry, package, process, and FAQ content
 - Dedicated service, industry, company, contact, privacy, and terms routes
 - Server-side contact delivery with Zod validation, a honeypot, rate limiting, and Resend
@@ -27,6 +27,7 @@ Production website for Northstar Systems, a technology implementation and busine
 - `/privacy`
 - `/terms`
 - `/api/contact` (`POST` only)
+- `/api/chat` (`POST` only)
 
 ## Local setup
 
@@ -49,6 +50,8 @@ The development server prints its local URL. The contact page remains usable for
 | `CONTACT_FROM_EMAIL` | Recommended | Verified Resend sender, e.g. `Northstar Systems <hello@yourdomain.com>` |
 | `NEXT_PUBLIC_SITE_URL` | Before launch | Canonical production URL used by sitemap and robots metadata |
 | `NEXT_PUBLIC_BOOKING_URL` | When a scheduler is connected | Public booking destination for future direct-booking CTAs |
+| `AI_GATEWAY_API_KEY` | Outside Vercel OIDC deployments | Server-only Vercel AI Gateway credential; Vercel deployments use the injected OIDC token by default |
+| `AI_CHAT_MODEL` | Optional | Gateway model override; defaults to `openai/gpt-5-mini` |
 
 Never commit real credentials. The default Resend sender is suitable only for initial testing and must be replaced with a verified sender for production delivery.
 
@@ -59,6 +62,7 @@ Never commit real credentials. The default Resend sender is suitable only for in
 - Main page sections and shared layout: `app/site.tsx`
 - Contact form fields and client states: `app/contact-form.tsx`
 - Contact validation and server delivery: `app/contact-schema.ts` and `app/api/contact/route.ts`
+- AI assistant UI, validation, and server route: `app/ai-chat.tsx`, `app/chat-schema.ts`, and `app/api/chat/route.ts`
 - Visual system and responsive behavior: `app/globals.css`
 - Metadata and structured data: `app/layout.tsx` and `app/[...slug]/page.tsx`
 
@@ -77,7 +81,7 @@ The `dev`, `build`, `start`, `test`, and `lint` commands are monitored. Each run
 
 ## Deployment
 
-The project uses the bundled vinext/Cloudflare-compatible Sites runtime. Set the hosted environment variables, build the exact source revision, and deploy through Sites. The contact endpoint uses an edge-compatible runtime.
+Production is deployed with Next.js on Vercel. The chat endpoint authenticates to Vercel AI Gateway using the deployment OIDC token; non-Vercel environments require `AI_GATEWAY_API_KEY`. Chat and contact routes validate input server-side and use edge-compatible runtimes.
 
 ## Replace before public launch
 

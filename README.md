@@ -51,7 +51,7 @@ The development server prints its local URL. The contact page remains usable for
 | `NEXT_PUBLIC_SITE_URL` | Before launch | Canonical production URL used by sitemap and robots metadata |
 | `NEXT_PUBLIC_BOOKING_URL` | When a scheduler is connected | Public booking destination for future direct-booking CTAs |
 | `AI_GATEWAY_API_KEY` | Outside Vercel OIDC deployments | Server-only Vercel AI Gateway credential; Vercel deployments use the injected OIDC token by default |
-| `AI_CHAT_MODEL` | Optional | Gateway model override; defaults to `openai/gpt-5-mini` |
+| `AI_CHAT_MODEL` | Optional | Gateway model override; defaults to the free-tier-eligible `alibaba/qwen3.7-flash` |
 
 Never commit real credentials. The default Resend sender is suitable only for initial testing and must be replaced with a verified sender for production delivery.
 

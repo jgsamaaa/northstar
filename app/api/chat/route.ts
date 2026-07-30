@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
         "content-type": "application/json",
       },
       body: JSON.stringify({
-        model: process.env.AI_CHAT_MODEL || "openai/gpt-5-mini",
+        model: process.env.AI_CHAT_MODEL || "alibaba/qwen3.7-flash",
         messages: [
           { role: "system", content: systemPrompt },
           ...parsed.data.messages,

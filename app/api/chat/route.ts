@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { chatRequestSchema } from "../../chat-schema";
-import { industries, packages, process as implementationProcess, projects, services } from "../../site-data";
+import { advancedSystems, industries, packageAddOns, packages, process as implementationProcess, projects, services } from "../../site-data";
 
 export const runtime = "edge";
 
@@ -27,12 +27,14 @@ const knowledge = JSON.stringify({
   services: services.map(({ name, headline, description, features }) => ({ name, headline, description, features })),
   projects: projects.map(({ name, category, status, summary, outcome, services: projectServices }) => ({ name, category, status, summary, outcome, services: projectServices })),
   industries: industries.map(({ name, problem, outcome, system }) => ({ name, problem, outcome, system })),
-  packages: packages.map(({ name, description, outcome, primary, expanded }) => ({ name, description, outcome, primary, expanded })),
+  packages: packages.map(({ name, price, description, outcome, primary, expanded }) => ({ name, price, description, outcome, primary, expanded })),
+  advancedSystems,
+  packageAddOns: packageAddOns.map(([name, detail]) => ({ name, detail })),
   process: implementationProcess.map(([step, name, description]) => ({ step, name, description })),
   contact: {
     offer: "Free 20–30 minute systems audit with no obligation.",
     handoff: "Use the website contact form so the Northstar team can review the business and respond.",
-    pricing: "Pricing, scope, availability, and timelines are confirmed only after discovery and a written proposal.",
+    pricing: "The assistant may repeat published starting prices exactly. Final scope, availability, timelines, third-party costs, and the written proposal are confirmed after discovery.",
   },
 });
 
@@ -43,7 +45,7 @@ Rules:
 - Be concise, useful, and conversational. Prefer 2–5 short paragraphs or a brief list, under 160 words.
 - Reply in the visitor's language when practical, including English, Tagalog, or Bisaya.
 - You may explain services, projects, industries, packages, process, and suggest a practical starting point.
-- Never set or invent prices, discounts, deadlines, availability, guarantees, client results, commercial terms, or formal scope. Explain that these require a systems audit and written proposal.
+- You may repeat a published starting price exactly as it appears in the approved knowledge. Never invent or alter prices, discounts, deadlines, availability, guarantees, client results, commercial terms, or formal scope. Explain that final requirements and pricing require a systems audit and written proposal.
 - Never claim to be human. Never reveal, infer, or discuss private founder identity or personal information.
 - Never request passwords, payment details, government IDs, medical records, or other sensitive information.
 - Do not provide legal, tax, accounting, medical, or regulated professional advice.

@@ -10,7 +10,7 @@ import { ContactForm } from "./contact-form";
 import { ProductDemo } from "./interactive-sections";
 import { Logo } from "./logo";
 import { siteConfig } from "./site-config";
-import { commerceDisclaimer, industries, packages, process, projects, services, type Project } from "./site-data";
+import { advancedSystems, commerceDisclaimer, industries, packageAddOns, packages, process, projects, services, type Project } from "./site-data";
 
 const homeOffers = [
   {
@@ -33,11 +33,11 @@ const homeOffers = [
   },
   {
     eyebrow: "GROW WITH CONTROL",
-    title: "Automation and ongoing support",
-    copy: "Reduce repetitive work with practical automation, controlled AI assistance, training, and support after launch.",
-    features: ["Workflow automation", "AI assistance with human handoff", "Maintenance, training, and support"],
-    href: "/services/automation-integrations",
-    cta: "Explore automation",
+    title: "POS, inventory, and custom systems",
+    copy: "Implement an appropriate operational platform first, then scope custom software only when the business truly needs it.",
+    features: ["POS and inventory implementation", "Provider integration when supported", "Custom systems with clear operational boundaries"],
+    href: "/services/pos-inventory",
+    cta: "Explore operational systems",
     Icon: Workflow,
   },
 ] as const;
@@ -108,8 +108,10 @@ function ContactIntro() {
 
 function PackagesContent() {
   return <>
-    <div className="packages-grid">{packages.map((item, index) => <Reveal key={item.name}><article className={index === 3 ? "featured" : ""}><div className="package-label"><span>{item.tag}</span><b>0{index + 1}</b></div><h3>{item.name}</h3><div className="package-audience"><span>WHO IT IS FOR</span><p>{item.description}</p></div><p className="package-outcome">{item.outcome}</p><ul className="package-primary">{item.primary.map(feature => <li key={feature}><Check aria-hidden="true" />{feature}</li>)}</ul><details className="package-disclosure"><summary>View full scope <ChevronDown size={18} aria-hidden="true" /></summary><ul>{item.expanded.map(feature => <li key={feature}><Check aria-hidden="true" />{feature}</li>)}</ul></details><Link href="/contact">{item.cta}<ArrowRight/></Link></article></Reveal>)}</div>
-    <div className="pricing-notes"><p><b>Why pricing is customized:</b> Every Northstar system is scoped around the business’s workflow, number of locations, staff, products, booking resources, required integrations, and support needs. After a free systems audit, we provide a clear proposal with the project scope, timeline, and third-party costs.</p><p><b>Provider-cost note:</b> Third-party software, POS subscriptions, accreditation requirements, hardware, messaging, payment processing, AI usage, and other provider fees are quoted separately when applicable.</p></div>
+    <div className="packages-grid">{packages.map((item, index) => <Reveal key={item.name}><article className={index === 1 ? "featured" : ""}><div className="package-label"><span>{item.tag}</span><b>0{index + 1}</b></div><h3>{item.name}</h3><p className="package-price">{item.price}</p><div className="package-audience"><span>WHO IT IS FOR</span><p>{item.description}</p></div><p className="package-outcome">{item.outcome}</p><ul className="package-primary">{item.primary.map(feature => <li key={feature}><Check aria-hidden="true" />{feature}</li>)}</ul><details className="package-disclosure"><summary>View full scope <ChevronDown size={18} aria-hidden="true" /></summary><ul>{item.expanded.map(feature => <li key={feature}><Check aria-hidden="true" />{feature}</li>)}</ul></details><Link href="/contact">{item.cta}<ArrowRight/></Link></article></Reveal>)}</div>
+    <div className="pricing-notes"><p><b>Clear starting prices:</b> The listed amount covers the stated base scope. Additional pages, integrations, data entry, provider setup, and operational requirements are quoted before work begins.</p><p><b>Client-owned costs:</b> Clients purchase and own their domain and third-party accounts. Domain connection, subscriptions, hardware, messaging, payment processing, accreditation work, and other provider fees are separate.</p></div>
+    <section className="advanced-systems" aria-labelledby="advanced-systems-title"><div className="package-section-heading"><Eyebrow>ADVANCED SYSTEMS</Eyebrow><h2 id="advanced-systems-title">Custom work starts with a validated operational scope.</h2><p>These are separate products—not small website add-ons. Final pricing depends on workflows, users, locations, integrations, compliance, data migration, and support requirements.</p></div><div className="advanced-system-grid">{advancedSystems.map(item => <article key={item.name}><span>{item.price}</span><h3>{item.name}</h3><p>{item.description}</p><ul>{item.features.map(feature => <li key={feature}><Check aria-hidden="true" />{feature}</li>)}</ul><Link href="/contact">Request a scoped proposal <ArrowRight size={17} aria-hidden="true" /></Link></article>)}</div></section>
+    <section className="package-addons" aria-labelledby="package-addons-title"><div className="package-section-heading"><Eyebrow>ADD-ONS & CLIENT-OWNED COSTS</Eyebrow><h2 id="package-addons-title">Add only what the project actually needs.</h2></div><div className="package-addon-list">{packageAddOns.map(([name, detail]) => <article key={name}><h3>{name}</h3><p>{detail}</p></article>)}</div></section>
   </>;
 }
 
@@ -186,7 +188,7 @@ export function ContentPage({ path }: { path: string }) {
   if (path === "projects") return <Shell><PageHero eyebrow="SELECTED PROJECTS" title="Digital work designed around the real job." copy="A growing record of Northstar website concepts and product systems, with each project clearly labeled by its current stage."/><section className="projects-section projects-page"><Reveal className="section-title split-title"><div><Eyebrow>PROJECT INDEX</Eyebrow><h2>Different industries. The same standard of clarity.</h2></div><p>This collection will grow as new Northstar projects are approved for publication. No invented outcomes or client claims.</p></Reveal><ProjectCards/></section><FinalCTA/></Shell>;
   if (path === "industries") return <Shell><PageHero eyebrow="INDUSTRY SOLUTIONS" title="Built for how your business operates." copy="Northstar adapts to your staff, resources, customers, and operating rules."/><section className="industry-cards section-pad">{industries.map((item, index) => <article key={item.name}><span>0{index + 1}</span><h2>{item.name}</h2><p>{item.problem}</p><div className="recommended-system"><small>RECOMMENDED SYSTEM</small><b>{item.system}</b></div><ul>{item.features.map(feature => <li key={feature}><Check/>{feature}</li>)}</ul></article>)}</section><FinalCTA/></Shell>;
   if (path === "how-it-works") return <Shell><PageHero eyebrow="HOW IT WORKS" title="A clear path from business problem to working system." copy="Every project moves through focused discovery, practical design, careful implementation, and a supported handover."/><section className="process-section process-page"><Reveal className="section-title split-title"><div><Eyebrow>THE NORTHSTAR PROCESS</Eyebrow><h2>Clarity at every step.</h2></div><p>You will know what is being built, why it matters, what it costs, and what your team needs before anything goes live.</p></Reveal><ProcessList/></section><FinalCTA/></Shell>;
-  if (path === "packages") return <Shell><PageHero eyebrow="SOLUTION PACKAGES" title="Choose the clearest place to begin." copy="Start with the closest fit. Every package is then scoped around your workflow, team, locations, integrations, and support needs."/><section className="packages-section standalone-packages"><PackagesContent/></section><FinalCTA/></Shell>;
+  if (path === "packages") return <Shell><PageHero eyebrow="SOLUTION PACKAGES" title="Start with a clear product and a clear price." copy="Choose a focused website package or begin with a scoped booking, POS, inventory, or custom system. Client-owned services and additional work are always identified separately."/><section className="packages-section standalone-packages"><PackagesContent/></section><FinalCTA/></Shell>;
   if (path === "about") return <Shell><PageHero eyebrow="ABOUT NORTHSTAR" title="Practical technology, focused on Philippine businesses." copy="Northstar combines disciplined execution and practical web development to help businesses build a stronger presence online."/><section className="about-story section-pad"><div><Eyebrow>ABOUT NORTHSTAR SYSTEMS</Eyebrow><h2>Practical digital systems built to help Philippine businesses move forward.</h2></div><div><p>Northstar Systems helps Philippine businesses create a stronger online presence and connect the tools behind inquiries, bookings, sales, inventory, customer support, and follow-up.</p><p>The goal is not to add more software for its own sake. It is to build one clear, practical system that customers can trust and teams can confidently operate.</p></div></section><FinalCTA/></Shell>;
   if (path === "contact") return <Shell><PageHero eyebrow="FREE SYSTEMS AUDIT" title="Show us where the business feels disconnected." copy="We’ll review the workflow, identify the highest-friction areas, and outline a practical direction."/><section className="home-contact contact-page"><ContactIntro/><ContactForm/></section></Shell>;
   const privacy = path === "privacy";

@@ -7,12 +7,13 @@ import { contactSchema } from "./contact-schema";
 type FieldErrors = Record<string, string[] | undefined>;
 
 const services = [
-  "Professional website",
-  "Online booking system",
-  "POS and inventory setup",
-  "AI customer assistant",
-  "Automation",
-  "Complete business system",
+  "Starter static website",
+  "Business website with contact form",
+  "Appointment booking website",
+  "Hotel or resort reservation website",
+  "POS and inventory implementation",
+  "Custom inventory or POS system",
+  "Optional AI or automation",
   "Not sure yet",
 ];
 

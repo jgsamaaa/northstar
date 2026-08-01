@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     projects: { title: "Selected Projects", description: "Northstar Systems website concepts and product platforms, presented with clear project-stage context." },
     industries: { title: "Industry Solutions", description: "Connected digital systems for clinics, salons, resorts, restaurants, retail businesses, and rental companies in the Philippines." },
     "how-it-works": { title: "How Northstar Projects Work", description: "A clear process for discovery, design, implementation, testing, training, launch, and ongoing support." },
-    packages: { title: "Northstar Solution Packages", description: "Practical website, booking, POS and inventory, AI assistance, and complete business system packages for Philippine businesses." },
+    packages: { title: "Northstar Solution Packages", description: "Clear website, booking, POS and inventory implementation, and custom-system starting prices for Philippine businesses." },
     about: { title: "About Northstar Systems", description: "Northstar Systems builds practical digital systems that help Philippine businesses strengthen their online presence and operate with more clarity." },
     contact: { title: "Book a Free Systems Audit", description: "Tell Northstar Systems how your business handles customers, bookings, sales, and inventory, and get a practical place to start." },
     privacy: { title: "Privacy Policy", description: "How Northstar Systems handles information shared through this website." },

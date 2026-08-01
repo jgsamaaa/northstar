@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 async function request(path = "/", init = {}) {
@@ -16,7 +17,7 @@ test("renders a focused, credible Northstar homepage", async () => {
   assert.match(html, /Websites that help Philippine businesses earn trust and win more inquiries/);
   assert.match(html, /Website design and development/);
   assert.match(html, /Booking and business operations/);
-  assert.match(html, /Automation and ongoing support/);
+  assert.match(html, /POS, inventory, and custom systems/);
   assert.match(html, /Product demonstration/i);
   assert.match(html, /Built for businesses where every customer handoff matters/);
   assert.match(html, /Real work, presented with honest context/);
@@ -51,6 +52,50 @@ test("renders every public route without broken internal pages", async () => {
     assert.match(html, /Northstar Systems/, route);
     assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/, route);
   }
+});
+
+test("renders the approved product ladder with honest scope boundaries", async () => {
+  const response = await request("/packages");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+
+  for (const offer of [
+    ["Starter Static Website", "US$200"],
+    ["Business Website", "US$400"],
+    ["Booking Website", "From US$800"],
+    ["POS &amp; Inventory Implementation", "From US$800"],
+    ["Hotel &amp; Resort Reservation Website", "From US$1,200"],
+    ["Custom Inventory System", "From US$1,500"],
+    ["Custom POS System", "From US$3,000"],
+  ]) {
+    assert.match(html, new RegExp(offer[0]));
+    assert.match(html, new RegExp(offer[1].replaceAll("$", "\\$")));
+  }
+
+  assert.match(html, /No contact form or lead storage/);
+  assert.match(html, /Form delivery tested with the client inbox/);
+  assert.match(html, /Domain connection/);
+  assert.match(html, /client purchases and owns the domain/i);
+  assert.match(html, /Live availability is promised only when a supported inventory source is connected/);
+  assert.match(html, /No BIR-accreditation claim without the required approval process/);
+  assert.match(html, /Clear website, booking, POS and inventory implementation, and custom-system starting prices/);
+  assert.doesNotMatch(html, /Complete Business System/);
+  assert.doesNotMatch(html, /complete business system packages/i);
+});
+
+test("keeps inquiry and AI catalogue options aligned with published products", async () => {
+  const contactResponse = await request("/contact");
+  const contactHtml = await contactResponse.text();
+  for (const option of ["Starter static website", "Business website with contact form", "Appointment booking website", "Hotel or resort reservation website", "POS and inventory implementation", "Custom inventory or POS system"]) {
+    assert.match(contactHtml, new RegExp(option));
+  }
+  assert.doesNotMatch(contactHtml, /Complete business system/);
+
+  const chatRoute = await readFile(new URL("../app/api/chat/route.ts", import.meta.url), "utf8");
+  assert.match(chatRoute, /advancedSystems/);
+  assert.match(chatRoute, /packageAddOns/);
+  assert.match(chatRoute, /name, price, description/);
+  assert.match(chatRoute, /published starting price exactly/);
 });
 
 test("renders an honest, data-driven project index", async () => {

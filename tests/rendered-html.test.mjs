@@ -60,10 +60,10 @@ test("renders the approved product ladder with honest scope boundaries", async (
   const html = await response.text();
 
   for (const offer of [
-    ["Starter Static Website", "₱12,000"],
-    ["Business Website", "₱24,000"],
-    ["Booking Website", "From ₱48,000"],
-    ["POS &amp; Inventory Implementation", "From ₱48,000"],
+    ["Starter Static Website", "₱15,000"],
+    ["Business Website", "₱25,000"],
+    ["Booking Website", "From ₱50,000"],
+    ["POS &amp; Inventory Implementation", "From ₱50,000"],
     ["Hotel &amp; Resort Reservation Website", "From ₱72,000"],
     ["Custom Inventory System", "From ₱90,000"],
     ["Custom POS System", "From ₱180,000"],

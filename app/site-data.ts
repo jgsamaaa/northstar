@@ -164,7 +164,7 @@ export const packages = [
   {
     name: "Starter Static Website",
     tag: "GET ONLINE",
-    price: "₱12,000",
+    price: "₱15,000",
     description: "Small businesses that need a clean, credible online presence without forms or backend systems.",
     outcome: "Launch a focused website that explains the business and sends visitors to the right direct contact channel.",
     primary: ["Small static website with agreed pages", "Responsive desktop and mobile design", "Facebook, email, or WhatsApp contact links", "Basic SEO foundations", "One revision round"],
@@ -174,7 +174,7 @@ export const packages = [
   {
     name: "Business Website",
     tag: "BUILD TRUST",
-    price: "₱24,000",
+    price: "₱25,000",
     description: "Businesses that need a more complete website and a dependable way to receive inquiries.",
     outcome: "Present the business professionally and turn qualified visitors into delivered inquiries.",
     primary: ["Up to five pages", "More customized responsive design", "Working contact form", "Direct contact and map integrations", "Two revision rounds"],
@@ -184,7 +184,7 @@ export const packages = [
   {
     name: "Booking Website",
     tag: "SCHEDULE",
-    price: "From ₱48,000",
+    price: "From ₱50,000",
     description: "Clinics, salons, consultants, rentals, and other appointment-led businesses.",
     outcome: "Give customers a clear path from service selection to a confirmed appointment using an appropriate booking provider.",
     primary: ["Up to seven website pages", "Booking-provider integration", "Service, staff, date, and time selection", "Customer information collection", "Testing, training, and handover"],
@@ -194,7 +194,7 @@ export const packages = [
   {
     name: "POS & Inventory Implementation",
     tag: "OPERATE",
-    price: "From ₱48,000",
+    price: "From ₱50,000",
     description: "Restaurants, cafés, retailers, and product-based businesses implementing an established provider.",
     outcome: "Configure a practical sales and stock workflow without pretending a custom POS is a simple website feature.",
     primary: ["Business workflow assessment", "Appropriate POS provider setup", "Product and inventory configuration", "Staff accounts and basic reports", "Testing and staff training"],

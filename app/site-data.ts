@@ -164,7 +164,7 @@ export const packages = [
   {
     name: "Starter Static Website",
     tag: "GET ONLINE",
-    price: "US$200",
+    price: "₱12,000",
     description: "Small businesses that need a clean, credible online presence without forms or backend systems.",
     outcome: "Launch a focused website that explains the business and sends visitors to the right direct contact channel.",
     primary: ["Small static website with agreed pages", "Responsive desktop and mobile design", "Facebook, email, or WhatsApp contact links", "Basic SEO foundations", "One revision round"],
@@ -174,7 +174,7 @@ export const packages = [
   {
     name: "Business Website",
     tag: "BUILD TRUST",
-    price: "US$400",
+    price: "₱24,000",
     description: "Businesses that need a more complete website and a dependable way to receive inquiries.",
     outcome: "Present the business professionally and turn qualified visitors into delivered inquiries.",
     primary: ["Up to five pages", "More customized responsive design", "Working contact form", "Direct contact and map integrations", "Two revision rounds"],
@@ -184,17 +184,17 @@ export const packages = [
   {
     name: "Booking Website",
     tag: "SCHEDULE",
-    price: "From US$800",
+    price: "From ₱48,000",
     description: "Clinics, salons, consultants, rentals, and other appointment-led businesses.",
     outcome: "Give customers a clear path from service selection to a confirmed appointment using an appropriate booking provider.",
     primary: ["Up to seven website pages", "Booking-provider integration", "Service, staff, date, and time selection", "Customer information collection", "Testing, training, and handover"],
-    expanded: ["Contact form and direct contact links", "Confirmations and reminders when supported", "Provider subscription paid by the client", "Deposits and payment processing quoted separately", "Hotel and resort reservation websites start at US$1,200", "Live availability is promised only when a supported inventory source is connected"],
+    expanded: ["Contact form and direct contact links", "Confirmations and reminders when supported", "Provider subscription paid by the client", "Deposits and payment processing quoted separately", "Hotel and resort reservation websites start at ₱72,000", "Live availability is promised only when a supported inventory source is connected"],
     cta: "Plan a Booking Website",
   },
   {
     name: "POS & Inventory Implementation",
     tag: "OPERATE",
-    price: "From US$800",
+    price: "From ₱48,000",
     description: "Restaurants, cafés, retailers, and product-based businesses implementing an established provider.",
     outcome: "Configure a practical sales and stock workflow without pretending a custom POS is a simple website feature.",
     primary: ["Business workflow assessment", "Appropriate POS provider setup", "Product and inventory configuration", "Staff accounts and basic reports", "Testing and staff training"],
@@ -206,19 +206,19 @@ export const packages = [
 export const advancedSystems = [
   {
     name: "Hotel & Resort Reservation Website",
-    price: "From US$1,200",
+    price: "From ₱72,000",
     description: "A scoped stay or venue reservation experience covering rooms or packages, guest details, dates, policies, and an honest availability workflow.",
     features: ["Room or package presentation", "Check-in and check-out flow", "Guest and reservation details", "Deposits or payments quoted separately"],
   },
   {
     name: "Custom Inventory System",
-    price: "From US$1,500",
+    price: "From ₱90,000",
     description: "A secure internal system for businesses whose stock workflow cannot be handled well by an established provider.",
     features: ["Products and stock movements", "Suppliers and purchasing", "User permissions", "Reports, exports, and audit history"],
   },
   {
     name: "Custom POS System",
-    price: "From US$3,000",
+    price: "From ₱180,000",
     description: "A separately scoped operational product for businesses with validated requirements, support expectations, and compliance responsibilities.",
     features: ["Checkout and inventory deduction", "Returns, voids, shifts, and reconciliation", "Roles, receipts, reports, and backups", "No BIR-accreditation claim without the required approval process"],
   },
@@ -226,7 +226,7 @@ export const advancedSystems = [
 
 export const packageAddOns = [
   ["Domain connection", "Paid service; the client purchases and owns the domain"],
-  ["Existing POS or inventory integration", "From US$250 when the provider supports the required connection"],
+  ["Existing POS or inventory integration", "From ₱15,000 when the provider supports the required connection"],
   ["Additional pages", "Quoted after the page content and complexity are confirmed"],
   ["Business email setup", "Quoted separately; provider fees remain with the client"],
   ["Payments or deposits", "Quoted separately; transaction and provider fees remain with the client"],

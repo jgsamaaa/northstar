@@ -60,13 +60,13 @@ test("renders the approved product ladder with honest scope boundaries", async (
   const html = await response.text();
 
   for (const offer of [
-    ["Starter Static Website", "US$200"],
-    ["Business Website", "US$400"],
-    ["Booking Website", "From US$800"],
-    ["POS &amp; Inventory Implementation", "From US$800"],
-    ["Hotel &amp; Resort Reservation Website", "From US$1,200"],
-    ["Custom Inventory System", "From US$1,500"],
-    ["Custom POS System", "From US$3,000"],
+    ["Starter Static Website", "₱12,000"],
+    ["Business Website", "₱24,000"],
+    ["Booking Website", "From ₱48,000"],
+    ["POS &amp; Inventory Implementation", "From ₱48,000"],
+    ["Hotel &amp; Resort Reservation Website", "From ₱72,000"],
+    ["Custom Inventory System", "From ₱90,000"],
+    ["Custom POS System", "From ₱180,000"],
   ]) {
     assert.match(html, new RegExp(offer[0]));
     assert.match(html, new RegExp(offer[1].replaceAll("$", "\\$")));
@@ -76,6 +76,8 @@ test("renders the approved product ladder with honest scope boundaries", async (
   assert.match(html, /Form delivery tested with the client inbox/);
   assert.match(html, /Domain connection/);
   assert.match(html, /client purchases and owns the domain/i);
+  assert.match(html, /Prices in Philippine pesos/);
+  assert.doesNotMatch(html, /US\$/);
   assert.match(html, /Live availability is promised only when a supported inventory source is connected/);
   assert.match(html, /No BIR-accreditation claim without the required approval process/);
   assert.match(html, /Clear website, booking, POS and inventory implementation, and custom-system starting prices/);

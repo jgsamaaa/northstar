@@ -10,6 +10,7 @@
     "dev:raw": "vinext dev",
     "build": "node scripts/run-with-diagnostics.mjs build vinext build",
     "build:raw": "vinext build",
+    "vercel-build": "next build",
     "start": "node scripts/run-with-diagnostics.mjs start vinext start",
     "start:raw": "vinext start",
     "test": "node scripts/run-with-diagnostics.mjs test npm run test:raw",

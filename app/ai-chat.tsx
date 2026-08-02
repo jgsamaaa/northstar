@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, KeyboardEvent as ReactKeyboardEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { ArrowRight, MessageCircle, Send, Sparkles, X } from "lucide-react";
 
 type ChatMessage = {
@@ -32,15 +32,22 @@ export function AiChat() {
   const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
   const inputRef = useRef<HTMLInputElement>(null);
   const logRef = useRef<HTMLDivElement>(null);
-  const panelRef = useRef<HTMLElement>(null);
   const launcherRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!open) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    window.requestAnimationFrame(() => inputRef.current?.focus());
-    return () => { document.body.style.overflow = previousOverflow; };
+    const focusFrame = window.requestAnimationFrame(() => inputRef.current?.focus());
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      setOpen(false);
+      window.requestAnimationFrame(() => launcherRef.current?.focus());
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.cancelAnimationFrame(focusFrame);
+      window.removeEventListener("keydown", onKeyDown);
+    };
   }, [open]);
 
   useEffect(() => {
@@ -53,25 +60,6 @@ export function AiChat() {
     window.requestAnimationFrame(() => launcherRef.current?.focus());
   }
 
-  function handleDialogKeyDown(event: ReactKeyboardEvent<HTMLElement>) {
-    if (event.key === "Escape") {
-      event.preventDefault();
-      closeChat();
-      return;
-    }
-    if (event.key !== "Tab") return;
-    const focusable = panelRef.current?.querySelectorAll<HTMLElement>('button:not([disabled]), input:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])');
-    if (!focusable?.length) return;
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault();
-      last.focus();
-    } else if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault();
-      first.focus();
-    }
-  }
 
   async function sendMessage(content: string, retry = false) {
     const trimmed = content.trim();
@@ -113,11 +101,11 @@ export function AiChat() {
   }
 
   return <div className={`ai-chat${open ? " is-open" : ""}`}>
-    {open && <section className="ai-chat-panel" ref={panelRef} role="dialog" aria-modal="true" aria-labelledby="ai-chat-title" onKeyDown={handleDialogKeyDown}>
-      <header className="ai-chat-header">
+    {open && <section id="northstar-ai-assistant" className="ai-chat-panel" role="region" aria-labelledby="ai-chat-title">
+      <div className="ai-chat-header">
         <div><span><Sparkles size={15} aria-hidden="true"/> AI ASSISTANT</span><h2 id="ai-chat-title">Ask Northstar</h2></div>
         <button type="button" className="ai-chat-close" onClick={closeChat} aria-label="Close AI assistant"><X aria-hidden="true"/></button>
-      </header>
+      </div>
 
       <div className="ai-chat-log" ref={logRef} role="log" aria-live="polite" aria-relevant="additions text">
         {messages.map((message, index) => <div className={`ai-chat-message ${message.role}`} key={`${message.role}-${index}`}>
@@ -139,13 +127,13 @@ export function AiChat() {
         <div><input id="ai-chat-input" ref={inputRef} value={input} onChange={(event) => setInput(event.target.value)} maxLength={600} placeholder="Ask about services or your workflow…" autoComplete="off" disabled={status === "sending"}/><button type="submit" disabled={!input.trim() || status === "sending"} aria-label="Send message"><Send aria-hidden="true"/></button></div>
       </form>
 
-      <footer className="ai-chat-footer">
+      <div className="ai-chat-footer">
         <p>AI-generated answers may be incomplete. Don’t share passwords, payment details, or sensitive information.</p>
         <button type="button" onClick={continueToContact}>Continue with the contact form <ArrowRight aria-hidden="true"/></button>
-      </footer>
+      </div>
     </section>}
 
-    <button type="button" ref={launcherRef} className="ai-chat-launcher" aria-label={open ? "Close Northstar AI assistant" : "Open Northstar AI assistant"} aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen((current) => !current)}>
+    <button type="button" ref={launcherRef} className="ai-chat-launcher" aria-label={open ? "Close Northstar AI assistant" : "Open Northstar AI assistant"} aria-controls="northstar-ai-assistant" aria-expanded={open} onClick={() => setOpen((current) => !current)}>
       {open ? <X aria-hidden="true"/> : <MessageCircle aria-hidden="true"/>}<span>{open ? "Close assistant" : "Ask Northstar"}</span>
     </button>
   </div>;

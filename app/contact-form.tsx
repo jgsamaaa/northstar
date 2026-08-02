@@ -2,20 +2,10 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Check } from "lucide-react";
-import { contactSchema } from "./contact-schema";
+import { contactLimits, contactSchema, contactServices } from "./contact-schema";
 
 type FieldErrors = Record<string, string[] | undefined>;
 
-const services = [
-  "Starter static website",
-  "Business website with contact form",
-  "Appointment booking website",
-  "Hotel or resort reservation website",
-  "POS and inventory implementation",
-  "Custom inventory or POS system",
-  "Optional AI or automation",
-  "Not sure yet",
-];
 
 const fieldOrder = ["name", "business", "contact", "services", "challenge", "currentWebsite", "consent"];
 const failureMessage = "We could not send your inquiry. Please try again or contact us directly through email or Messenger.";
@@ -28,6 +18,7 @@ function ErrorText({ name, errors }: { name: string; errors: FieldErrors }) {
 export function ContactForm() {
   const formRef = useRef<HTMLFormElement>(null);
   const messageRef = useRef<HTMLParagraphElement>(null);
+  const submittingRef = useRef(false);
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [errors, setErrors] = useState<FieldErrors>({});
 
@@ -55,6 +46,7 @@ export function ContactForm() {
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (submittingRef.current) return;
     setStatus("idle");
     setErrors({});
 
@@ -70,6 +62,7 @@ export function ContactForm() {
       return;
     }
 
+    submittingRef.current = true;
     setStatus("sending");
 
     try {
@@ -94,6 +87,8 @@ export function ContactForm() {
     } catch {
       setStatus("error");
       window.requestAnimationFrame(() => messageRef.current?.focus());
+    } finally {
+      submittingRef.current = false;
     }
   }
 
@@ -113,47 +108,50 @@ export function ContactForm() {
     </div>
 
     <div className="honeypot" aria-hidden="true">
-      <label>Company website<input name="companyWebsite" tabIndex={-1} autoComplete="off" /></label>
+      <label>Company website<input name="companyWebsite" maxLength={0} tabIndex={-1} autoComplete="off" /></label>
     </div>
 
     <div className="field-row">
       <label>Full name
-        <input name="name" required autoComplete="name" placeholder="Your full name" {...errorProps("name")} />
+        <input name="name" required maxLength={contactLimits.name} autoComplete="name" placeholder="Your full name" {...errorProps("name")} />
         <ErrorText name="name" errors={errors} />
       </label>
       <label>Business name
-        <input name="business" required autoComplete="organization" placeholder="Your business" {...errorProps("business")} />
+        <input name="business" required maxLength={contactLimits.business} autoComplete="organization" placeholder="Your business" {...errorProps("business")} />
         <ErrorText name="business" errors={errors} />
       </label>
     </div>
 
     <div className="field-row">
       <label>Email or Messenger
-        <input name="contact" required autoComplete="email" placeholder="Email, Messenger name, or link" {...errorProps("contact")} />
+        <input name="contact" required maxLength={contactLimits.contact} autoComplete="email" placeholder="Email, Messenger name, or link" {...errorProps("contact")} />
         <ErrorText name="contact" errors={errors} />
       </label>
       <label>Service needed
         <select name="services" required defaultValue="" {...errorProps("services")}>
           <option value="" disabled>Select a service</option>
-          {services.map((service) => <option key={service}>{service}</option>)}
+          {contactServices.map((service) => <option key={service}>{service}</option>)}
         </select>
         <ErrorText name="services" errors={errors} />
       </label>
     </div>
 
     <label>What do you need help with?
-      <textarea name="challenge" required rows={5} placeholder="Briefly tell us how customers currently inquire, book, order, or pay—and what you would like to improve." {...errorProps("challenge")} />
+      <textarea name="challenge" required maxLength={contactLimits.challenge} rows={5} placeholder="Briefly tell us how customers currently inquire, book, order, or pay—and what you would like to improve." {...errorProps("challenge")} />
       <ErrorText name="challenge" errors={errors} />
     </label>
 
     <label>Current website or Facebook page <small>Optional</small>
-      <input name="currentWebsite" type="url" inputMode="url" placeholder="https://" {...errorProps("currentWebsite")} />
+      <input name="currentWebsite" type="url" inputMode="url" maxLength={contactLimits.currentWebsite} placeholder="https://" {...errorProps("currentWebsite")} />
       <ErrorText name="currentWebsite" errors={errors} />
     </label>
 
     <label className="consent">
       <input name="consent" type="checkbox" required {...errorProps("consent")} />
-      <span>I agree that Northstar Systems may use these details to respond to my inquiry.<ErrorText name="consent" errors={errors} /></span>
+      <span className="consent-content">
+        <span className="consent-copy">I agree that Northstar Systems may use these details to respond to my inquiry.</span>
+        <ErrorText name="consent" errors={errors} />
+      </span>
     </label>
 
     {status === "error" && <p ref={messageRef} className="form-message error" role="alert" tabIndex={-1}>{failureMessage}</p>}

@@ -6,21 +6,25 @@
     "node": ">=22.13.0"
   },
   "scripts": {
-    "dev": "node scripts/run-with-diagnostics.mjs dev vinext dev",
-    "dev:raw": "vinext dev",
-    "build": "node scripts/run-with-diagnostics.mjs build vinext build",
-    "build:raw": "vinext build",
+    "dev": "node scripts/run-with-diagnostics.mjs dev next dev",
+    "dev:raw": "next dev",
+    "build": "node scripts/run-with-diagnostics.mjs build next build",
+    "build:raw": "next build",
     "vercel-build": "next build",
-    "start": "node scripts/run-with-diagnostics.mjs start vinext start",
-    "start:raw": "vinext start",
+    "start": "node scripts/run-with-diagnostics.mjs start next start",
+    "start:raw": "next start",
     "test": "node scripts/run-with-diagnostics.mjs test npm run test:raw",
-    "test:raw": "vinext build && node --test tests/rendered-html.test.mjs",
+    "test:raw": "npm run vercel-build && npm run test:unit && npm run test:rendered:next",
+    "test:unit": "node --experimental-strip-types --test tests/contact-protection.test.mjs tests/chat-protection.test.mjs tests/release-integrity.test.mjs tests/request-failure-classification.test.mjs",
+    "test:rendered:next": "node scripts/verify-next-rendered.mjs",
+    "test:e2e": "playwright test",
+    "typecheck": "tsc --noEmit",
+    "typecheck:release": "tsc -p tsconfig.release.json --noEmit",
+    "release:prepare": "node scripts/create-release-export.mjs --verify",
     "lint": "node scripts/run-with-diagnostics.mjs lint eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern .diagnostics",
-    "lint:raw": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern .diagnostics",
-    "db:generate": "drizzle-kit generate"
+    "lint:raw": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern .diagnostics"
   },
   "dependencies": {
-    "drizzle-orm": "0.45.2",
     "framer-motion": "^12.42.2",
     "lucide-react": "^1.24.0",
     "next": "^16.2.12",
@@ -30,22 +34,16 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "1.37.1",
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "4.2.1",
     "@types/node": "22.19.19",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "@vitejs/plugin-react": "6.0.2",
-    "@vitejs/plugin-rsc": "0.5.26",
-    "drizzle-kit": "0.31.10",
+    "axe-core": "^4.12.1",
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.6",
-    "react-server-dom-webpack": "19.2.6",
     "tailwindcss": "4.2.1",
-    "typescript": "5.9.3",
-    "vinext": "0.0.50",
-    "vite": "8.0.13",
-    "wrangler": "4.92.0"
+    "typescript": "5.9.3"
   },
   "type": "module",
   "overrides": {

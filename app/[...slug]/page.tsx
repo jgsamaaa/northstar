@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { ContentPage } from "../site";
 import { services } from "../site-data";
@@ -22,7 +23,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const details = service
     ? { title: service.headline, description: `${service.description} Available for Philippine businesses through Northstar Systems.` }
     : pageDetails[path];
-  if (!details) return {};
+  if (!details) {
+    return {
+      title: "Page not found",
+      description: "The requested Northstar Systems page could not be found.",
+      robots: { index: false, follow: false },
+    };
+  }
   return {
     title: details.title,
     description: details.description,
@@ -35,5 +42,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function CatchAllPage({ params }: { params: Promise<{ slug: string[] }> }) {
   const path = (await params).slug.join("/");
   if (!valid.has(path)) notFound();
-  return <ContentPage path={path} />;
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+  return <ContentPage path={path} nonce={nonce} />;
 }

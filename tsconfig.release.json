@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "noEmit": true
+  },
+  "exclude": [
+    "node_modules",
+    ".next",
+    "dist",
+    "app/api/messenger/**",
+    "app/lib/messenger/**",
+    "tests/messenger-conversation.test.ts",
+    "worker/**"
+  ]
+}

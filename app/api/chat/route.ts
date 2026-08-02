@@ -1,26 +1,49 @@
 import { NextRequest, NextResponse } from "next/server";
 import { chatRequestSchema } from "../../chat-schema";
 import { advancedSystems, industries, packageAddOns, packages, process as implementationProcess, projects, services } from "../../site-data";
+import { createInMemoryChatRateLimiter, normalizeClientKey } from "./request-protection";
 
 export const runtime = "edge";
 
 const WINDOW_MS = 10 * 60 * 1000;
-const MAX_REQUESTS = 12;
-const attempts = new Map<string, { count: number; resetAt: number }>();
+const MAX_REQUESTS = 5;
+const MAX_BODY_BYTES = 32 * 1024;
+// This bounded map is process-local defense in depth, not a globally durable serverless rate limit.
+const limiter = createInMemoryChatRateLimiter({ windowMs: WINDOW_MS, maxRequests: MAX_REQUESTS, maxEntries: 10_000 });
 
 function clientKey(request: NextRequest) {
-  return request.headers.get("cf-connecting-ip") || request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  return normalizeClientKey(request.headers.get("cf-connecting-ip") || request.headers.get("x-forwarded-for"));
 }
 
-function isRateLimited(key: string) {
-  const now = Date.now();
-  const entry = attempts.get(key);
-  if (!entry || entry.resetAt <= now) {
-    attempts.set(key, { count: 1, resetAt: now + WINDOW_MS });
-    return false;
+async function readBoundedUtf8Body(request: NextRequest): Promise<string | null> {
+  const declaredLength = request.headers.get("content-length");
+  if (declaredLength !== null) {
+    const parsedLength = Number(declaredLength);
+    if (!Number.isSafeInteger(parsedLength) || parsedLength < 0 || parsedLength > MAX_BODY_BYTES) return null;
   }
-  entry.count += 1;
-  return entry.count > MAX_REQUESTS;
+
+  if (!request.body) return "";
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let totalBytes = 0;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    totalBytes += value.byteLength;
+    if (totalBytes > MAX_BODY_BYTES) {
+      await reader.cancel();
+      return null;
+    }
+    chunks.push(value);
+  }
+
+  const body = new Uint8Array(totalBytes);
+  let offset = 0;
+  for (const chunk of chunks) {
+    body.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return new TextDecoder("utf-8", { fatal: true }).decode(body);
 }
 
 const knowledge = JSON.stringify({
@@ -61,9 +84,27 @@ type GatewayResponse = {
 };
 
 export async function POST(request: NextRequest) {
+  const rateLimit = limiter.consume(clientKey(request));
+  if (rateLimit.limited) {
+    return NextResponse.json(
+      { ok: false, error: "Too many requests. Please try again later." },
+      { status: 429, headers: { "Retry-After": String(rateLimit.retryAfterSeconds) } },
+    );
+  }
+
+  let bodyText: string | null;
+  try {
+    bodyText = await readBoundedUtf8Body(request);
+  } catch {
+    return NextResponse.json({ ok: false, error: "The request could not be read." }, { status: 400 });
+  }
+  if (bodyText === null) {
+    return NextResponse.json({ ok: false, error: "The request is too large." }, { status: 413 });
+  }
+
   let body: unknown;
   try {
-    body = await request.json();
+    body = JSON.parse(bodyText);
   } catch {
     return NextResponse.json({ ok: false, error: "The request could not be read." }, { status: 400 });
   }
@@ -73,13 +114,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, error: "Please enter a shorter, valid question." }, { status: 400 });
   }
 
-  if (isRateLimited(clientKey(request))) {
-    return NextResponse.json({ ok: false, error: "Too many questions. Please wait a few minutes or use the contact form." }, { status: 429 });
-  }
-
   const token = process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_OIDC_TOKEN;
   if (!token) {
-    return NextResponse.json({ ok: false, error: "The AI assistant is not configured right now. Please use the contact form." }, { status: 503 });
+    return NextResponse.json({ ok: false, error: "The assistant is unavailable. Please use the contact form." }, { status: 503 });
   }
 
   try {
@@ -102,24 +139,25 @@ export async function POST(request: NextRequest) {
     });
 
     if (!gatewayResponse.ok) {
-      const details = await gatewayResponse.json().catch(() => null) as { error?: { type?: string; message?: string } } | null;
+      const details = await gatewayResponse.json().catch(() => null) as { error?: { type?: string } } | null;
+      const correlationId = crypto.randomUUID();
       console.error("AI Gateway request failed", {
+        correlationId,
         status: gatewayResponse.status,
         type: details?.error?.type || "unknown",
-        message: details?.error?.message?.slice(0, 300) || "No upstream message",
       });
-      return NextResponse.json({ ok: false, error: "The assistant could not respond right now. Please use the contact form." }, { status: 502 });
+      return NextResponse.json({ ok: false, error: "The assistant is unavailable. Please use the contact form." }, { status: 502 });
     }
 
     const result = await gatewayResponse.json() as GatewayResponse;
     const message = result.choices?.[0]?.message?.content?.trim();
     if (!message) {
-      return NextResponse.json({ ok: false, error: "The assistant returned an empty response. Please use the contact form." }, { status: 502 });
+      return NextResponse.json({ ok: false, error: "The assistant is unavailable. Please use the contact form." }, { status: 502 });
     }
 
     return NextResponse.json({ ok: true, message: message.slice(0, 2400) });
   } catch (error) {
     console.error("AI Gateway request error:", error instanceof Error ? error.name : "UnknownError");
-    return NextResponse.json({ ok: false, error: "The assistant is temporarily unavailable. Please use the contact form." }, { status: 502 });
+    return NextResponse.json({ ok: false, error: "The assistant is unavailable. Please use the contact form." }, { status: 502 });
   }
 }

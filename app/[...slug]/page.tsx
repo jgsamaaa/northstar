@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
+import { GrowthContentPage, growthPaths, metadataForGrowthPage } from "../growth-pages";
 import { ContentPage } from "../site";
 import { services } from "../site-data";
 
-const valid = new Set(["services", "services/websites", "services/booking", "services/pos-inventory", "services/ai-automation", "services/automation-integrations", "services/support-maintenance", "projects", "industries", "how-it-works", "packages", "about", "contact", "privacy", "terms"]);
+const valid = new Set(["services", "services/websites", "services/booking", "services/pos-inventory", "services/ai-automation", "services/automation-integrations", "services/support-maintenance", "projects", "industries", "how-it-works", "packages", "about", "contact", "privacy", "terms", ...growthPaths]);
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string[] }> }): Promise<Metadata> {
   const path = (await params).slug.join("/");
+  const growthMetadata = metadataForGrowthPage(path);
+  if (growthMetadata) return growthMetadata;
   const service = path.startsWith("services/") ? services.find((item) => path.endsWith(item.slug)) : undefined;
   const pageDetails: Record<string, { title: string; description: string }> = {
     services: { title: "Business Systems and Services", description: "Websites, online booking, POS and inventory implementation, AI assistance, and automation for Philippine businesses." },
@@ -43,5 +46,6 @@ export default async function CatchAllPage({ params }: { params: Promise<{ slug:
   const path = (await params).slug.join("/");
   if (!valid.has(path)) notFound();
   const nonce = (await headers()).get("x-nonce") ?? undefined;
+  if (growthPaths.has(path)) return <GrowthContentPage path={path} nonce={nonce} />;
   return <ContentPage path={path} nonce={nonce} />;
 }

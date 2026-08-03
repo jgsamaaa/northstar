@@ -13,8 +13,12 @@ async function request(path = "/", init = {}) {
   });
 }
 
-const publicRoutes = ["/", "/services", "/services/websites", "/services/booking", "/services/pos-inventory", "/services/ai-automation", "/services/automation-integrations", "/services/support-maintenance", "/projects", "/industries", "/how-it-works", "/packages", "/about", "/contact", "/privacy", "/terms"];
+const publicRoutes = ["/", "/services", "/services/websites", "/services/booking", "/services/pos-inventory", "/services/custom-software-development", "/services/ai-automation", "/services/automation-integrations", "/services/support-maintenance", "/projects", "/industries", "/industries/resorts-hotels", "/industries/dental-clinics", "/guides/business-website-cost-philippines", "/how-it-works", "/packages", "/about", "/contact", "/privacy", "/terms"];
 const repositoryRoot = fileURLToPath(new URL("..", import.meta.url));
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 function inspectConfiguredPublicUrl(value) {
   return spawnSync(process.execPath, [
@@ -46,21 +50,32 @@ test("renders a focused, credible Northstar homepage", async () => {
   assert.equal(response.status, 200);
   const html = await response.text();
 
-  assert.match(html, /Websites that help Philippine businesses earn trust and win more inquiries/);
+  assert.match(html, /<title>Web Development Company Philippines \| Northstar Systems<\/title>/);
+  assert.match(html, /name="description" content="Northstar builds professional websites and connected booking, sales, inventory, and automation systems for businesses across the Philippines\."/);
+  assert.equal((html.match(/<h1\b/g) ?? []).length, 1);
+  assert.match(html, /Websites and connected business systems for Philippine companies\./);
   assert.match(html, /Website design and development/);
-  assert.match(html, /Booking and business operations/);
-  assert.match(html, /POS, inventory, and custom systems/);
+  assert.match(html, /Online booking and reservations/);
+  assert.match(html, /POS and inventory implementation/);
+  assert.match(html, /Custom business software/);
+  assert.match(html, /AI assistance and business automation/);
+  assert.match(html, /Support after launch/);
   assert.match(html, /Product demonstration/i);
-  assert.match(html, /Built for businesses where every customer handoff matters/);
-  assert.match(html, /Real work, presented with honest context/);
+  assert.match(html, /Built for businesses across the Philippines\./);
+  assert.match(html, /Work presented with honest context\./);
   for (const featuredProject of ["TOP ASIA", "Bukidnon", "Hidden Gardens Resort", "The Petite Creamery"]) {
     assert.match(html, new RegExp(featuredProject));
   }
   assert.doesNotMatch(html, /DR\. B\. Dental Clinic|Sight Expert Eye Care Clinic|Aloha Beach Resort|TeachReady Abroad|The Aureline|Redotest/);
   assert.doesNotMatch(html, /Northstar FleetOps/);
-  assert.match(html, /A clear process, without the usual agency fog/);
+  assert.match(html, /A clear process from first problem to working system\./);
+  assert.match(html, /What a Northstar project includes\./);
+  assert.match(html, /Frequently asked questions\./);
   assert.match(html, /Request a Free Systems Audit/);
   assert.match(html, /href="\/services\/websites"/);
+  assert.match(html, /href="\/services\/custom-software-development"/);
+  assert.match(html, /href="\/industries\/resorts-hotels"/);
+  assert.match(html, /href="\/industries\/dental-clinics"/);
   assert.match(html, /href="\/industries"/);
   assert.match(html, /href="\/projects"/);
   assert.match(html, /href="\/packages"/);
@@ -75,6 +90,82 @@ test("renders a focused, credible Northstar homepage", async () => {
   assert.doesNotMatch(html, /₱(?:25|40|45|75)k/i);
   assert.doesNotMatch(html, /future founder photograph|replace with James|portrait placeholder/i);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/);
+});
+
+test("renders the authoritative first-growth SEO pages with exact metadata, copy, links, and schema", async () => {
+  const pages = [
+    {
+      route: "/services/custom-software-development",
+      title: "Custom Software Development Philippines | Northstar Systems",
+      description: "Northstar scopes and builds custom business software for validated Philippine workflows, including internal tools, dashboards, inventory, and approvals.",
+      h1: "Custom software development for Philippine businesses.",
+      phrases: ["Build custom only when the workflow truly requires it.", "Business problems custom software can address.", "Integrations, migration, security, and compliance need separate validation.", "Start with the workflow, not a list of features."],
+      links: ["/services", "/services/automation-integrations", "/services/pos-inventory", "/services/support-maintenance", "/industries", "/projects", "/how-it-works", "/packages", "/contact"],
+    },
+    {
+      route: "/industries/resorts-hotels",
+      title: "Resort Website Design Philippines | Northstar Systems",
+      description: "Northstar designs resort and hotel websites with clear room, package, inquiry, and reservation journeys for properties across the Philippines.",
+      h1: "Resort and hotel websites built around the guest journey.",
+      phrases: ["Help guests understand the stay before they send a message.", "Choose the right reservation model.", "Live availability only with a supported source", "Relevant Northstar hospitality concepts.", "Live concept"],
+      links: ["/services/websites", "/services/booking", "/services/pos-inventory", "/services/automation-integrations", "/industries", "/projects", "/how-it-works", "/packages", "/contact"],
+    },
+    {
+      route: "/industries/dental-clinics",
+      title: "Dental Clinic Website Philippines | Northstar Systems",
+      description: "Northstar designs dental clinic websites and appointment journeys that explain services clearly and support practical patient inquiries across the Philippines.",
+      h1: "Dental clinic websites built for clear patient journeys.",
+      phrases: ["Help prospective patients understand the clinic before they contact you.", "Make appointment requests easier for patients and staff.", "Use intake, automation, and AI with clear boundaries.", "DR. B. Dental Clinic", "Live concept"],
+      links: ["/services/websites", "/services/booking", "/services/ai-automation", "/services/automation-integrations", "/services/support-maintenance", "/industries", "/projects", "/how-it-works", "/packages", "/contact"],
+    },
+    {
+      route: "/guides/business-website-cost-philippines",
+      title: "Business Website Cost Philippines: 2026 Pricing Guide",
+      description: "See Northstar’s current website starting prices, what each package includes, separate provider costs, and the factors that affect a Philippine website quote.",
+      h1: "How Much Does a Business Website Cost in the Philippines?",
+      phrases: ["Last reviewed:", "August 2026", "Starter Static Website — ₱15,000", "Business Website — ₱25,000", "Booking Website — from ₱50,000", "Hotel and Resort Reservation Website — from ₱72,000", "Questions to ask before accepting a website proposal.", "Warning signs in an unusually cheap or unclear quote."],
+      links: ["/packages", "/services/websites", "/services/booking", "/industries/resorts-hotels", "/services/pos-inventory", "/services/custom-software-development", "/how-it-works", "/projects", "/contact"],
+    },
+  ];
+
+  for (const page of pages) {
+    const response = await request(page.route);
+    assert.equal(response.status, 200, page.route);
+    const html = await response.text();
+    assert.match(html, new RegExp(`<title>${escapeRegExp(page.title)}<\\/title>`), `${page.route} title`);
+    assert.match(html, new RegExp(`name="description" content="${escapeRegExp(page.description)}"`), `${page.route} description`);
+    assert.equal((html.match(/<h1\b/g) ?? []).length, 1, `${page.route} H1 count`);
+    assert.match(html, new RegExp(escapeRegExp(page.h1)), `${page.route} H1`);
+    for (const phrase of page.phrases) assert.match(html, new RegExp(escapeRegExp(phrase), "i"), `${page.route}: ${phrase}`);
+    for (const href of page.links) assert.match(html, new RegExp(`href="${escapeRegExp(href)}"`), `${page.route}: ${href}`);
+    const absolute = `https://northstarsystems.ph${page.route}`;
+    assert.match(html, new RegExp(`rel="canonical" href="${escapeRegExp(absolute)}"`), `${page.route} canonical`);
+    assert.match(html, new RegExp(`property="og:url" content="${escapeRegExp(absolute)}"`), `${page.route} Open Graph URL`);
+    assert.match(html, /BreadcrumbList/, `${page.route} breadcrumbs schema`);
+    assert.match(html, /FAQPage/, `${page.route} FAQ schema`);
+    assert.match(html, /https:\/\/northstarsystems\.ph\/#organization/, `${page.route} organization provider`);
+    assert.match(html, /aria-label="Breadcrumb"/, `${page.route} visible breadcrumbs`);
+    assert.match(html, /Book a Free Systems Audit/, `${page.route} audit CTA`);
+  }
+});
+
+test("links the new growth pages from existing Northstar hubs without prohibited claims", async () => {
+  const hubs = {
+    "/services": ["/services/custom-software-development"],
+    "/industries": ["/industries/resorts-hotels", "/industries/dental-clinics"],
+    "/packages": ["/guides/business-website-cost-philippines"],
+    "/projects": ["/industries/resorts-hotels", "/industries/dental-clinics"],
+  };
+  for (const [route, links] of Object.entries(hubs)) {
+    const html = await (await request(route)).text();
+    for (const href of links) assert.match(html, new RegExp(`href="${escapeRegExp(href)}"`), `${route}: ${href}`);
+  }
+
+  for (const route of ["/", "/services/custom-software-development", "/industries/resorts-hotels", "/industries/dental-clinics", "/guides/business-website-cost-philippines"]) {
+    const html = await (await request(route)).text();
+    assert.doesNotMatch(html, /Northstar guarantees? (?:rankings?|traffic|inquiries|bookings|sales|revenue|ROI)|Northstar is the best|will rank first on Google|will increase direct bookings/i, route);
+    assert.doesNotMatch(html, /AggregateRating|reviewRating|aggregateRating/, route);
+  }
 });
 
 test("renders every public route without broken internal pages", async () => {
@@ -265,7 +356,7 @@ test("serves branded SEO discovery files and canonicals for all public routes", 
   assert.equal(sitemap.status, 200);
   const sitemapText = await sitemap.text();
   const sitemapUrls = [...sitemapText.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => match[1]);
-  assert.equal(sitemapUrls.length, 16);
+  assert.equal(sitemapUrls.length, 20);
   assert.ok(sitemapUrls.every((url) => url.startsWith("https://northstarsystems.ph")));
   assert.deepEqual(sitemapUrls.map((url) => new URL(url).pathname), publicRoutes);
   const sitemapDates = [...sitemapText.matchAll(/<lastmod>(.*?)<\/lastmod>/g)].map((match) => match[1]);

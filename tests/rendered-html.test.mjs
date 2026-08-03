@@ -49,7 +49,11 @@ test("renders a focused, credible Northstar homepage", async () => {
   const response = await request();
   assert.equal(response.status, 200);
   const html = await response.text();
+  const homepageSource = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
 
+  assert.match(homepageSource, /import \{ HomePage \} from "\.\/site";/);
+  assert.match(homepageSource, /<HomePage \/>/);
+  assert.doesNotMatch(homepageSource, /GrowthHomePage|growth-pages\/home/);
   assert.match(html, /<title>Web Development Company Philippines \| Northstar Systems<\/title>/);
   assert.match(html, /name="description" content="Northstar builds professional websites and connected booking, sales, inventory, and automation systems for businesses across the Philippines\."/);
   assert.equal((html.match(/<h1\b/g) ?? []).length, 1);
@@ -59,7 +63,7 @@ test("renders a focused, credible Northstar homepage", async () => {
   assert.match(html, /"@id":"https:\/\/northstarsystems\.ph\/#website"/);
 
   assert.match(html, /<section class="hero">/);
-  assert.doesNotMatch(html, /growth-home-hero/);
+  assert.doesNotMatch(html, /growth-home-/);
   assert.match(html, /Websites that help Philippine businesses earn trust and win more inquiries\./);
   assert.match(html, /A professional website first\. Connected systems when they make sense\./);
   assert.match(html, /Website design and development/);
@@ -83,6 +87,8 @@ test("renders a focused, credible Northstar homepage", async () => {
   assert.match(html, /href="\/projects"/);
   assert.match(html, /href="\/packages"/);
   assert.match(html, /href="\/contact"/);
+  assert.match(html, /aria-label="Open Northstar AI assistant"/);
+  assert.match(html, /aria-controls="northstar-ai-assistant"/);
 
   assert.doesNotMatch(html, /EARLY CLIENT FEEDBACK|Mara L\.|Paolo R\.|Denise C\.|temporary launch copy/);
   assert.doesNotMatch(html, /Everything your business needs to operate online/);

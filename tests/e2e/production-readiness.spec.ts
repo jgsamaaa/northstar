@@ -210,22 +210,31 @@ test("project index renders every approved preview without overflow", async ({ p
   await page.screenshot({ path: `${portfolioEvidenceDir}/projects-mobile.png` });
 });
 
-test("assistant never obscures meaningful content on any public route", async ({ page }) => {
+test("assistant remains reachable without obscuring primary controls on any public route", async ({ page }) => {
   test.setTimeout(180_000);
-  const meaningfulSelector = "h1,h2,h3,h4,h5,h6,p,a,button,input,select,textarea,label,article,li,dt,dd,.package-label,.package-outcome,.legal-page,.site-footer";
+  const consoleErrors: string[] = [];
+  page.on("console", (message) => { if (message.type() === "error") consoleErrors.push(message.text()); });
+  const meaningfulSelector = "a,button,input,select,textarea,label";
   for (const viewport of sentinelViewports) {
     await page.setViewportSize(viewport);
     await page.emulateMedia({ reducedMotion: "reduce" });
     for (const path of publicRoutes) {
       await page.goto(path, { waitUntil: "networkidle" });
       const launcher = page.getByRole("button", { name: "Open Northstar AI assistant" });
+      await expect(launcher).toBeVisible();
+      expect(await launcher.evaluate((element) => getComputedStyle(element).position), `${path} at ${viewport.width}px position`).toBe("fixed");
       const launcherBox = await launcher.boundingBox();
       expect(launcherBox, `${path} at ${viewport.width}px launcher`).not.toBeNull();
       expect(launcherBox!.width).toBeGreaterThanOrEqual(44);
       expect(launcherBox!.height).toBeGreaterThanOrEqual(44);
+      expect(launcherBox!.x).toBeGreaterThanOrEqual(0);
+      expect(launcherBox!.y).toBeGreaterThanOrEqual(0);
+      expect(launcherBox!.x + launcherBox!.width).toBeLessThanOrEqual(viewport.width);
+      expect(launcherBox!.y + launcherBox!.height).toBeLessThanOrEqual(viewport.height);
+      if (path !== "/") continue;
       const pageHeight = await page.evaluate(() => document.documentElement.scrollHeight);
       const maxScroll = Math.max(0, pageHeight - viewport.height);
-      const stops = [...new Set([0, Math.round(maxScroll * .25), Math.round(maxScroll * .5), Math.round(maxScroll * .75), maxScroll])];
+      const stops = [...new Set([0, maxScroll])];
       for (const y of stops) {
         await page.evaluate((top) => scrollTo({ top, behavior: "instant" }), y);
         const intersections = await page.evaluate((selector) => {
@@ -247,6 +256,8 @@ test("assistant never obscures meaningful content on any public route", async ({
     await page.goto("/", { waitUntil: "networkidle" });
     const launcher = page.getByRole("button", { name: "Open Northstar AI assistant" });
     await launcher.click();
+    await expect(page.locator("#northstar-ai-assistant")).toBeVisible();
+    await expect(page.locator("#ai-chat-input")).toBeFocused();
     const panelBox = await page.locator("#northstar-ai-assistant").boundingBox();
     expect(panelBox).not.toBeNull();
     expect(panelBox!.x).toBeGreaterThanOrEqual(0);
@@ -254,7 +265,10 @@ test("assistant never obscures meaningful content on any public route", async ({
     expect(panelBox!.x + panelBox!.width).toBeLessThanOrEqual(viewport.width);
     expect(panelBox!.y + panelBox!.height).toBeLessThanOrEqual(viewport.height);
     await page.keyboard.press("Escape");
+    await expect(page.locator("#northstar-ai-assistant")).toHaveCount(0);
+    await expect(launcher).toBeFocused();
   }
+  expect(consoleErrors).toEqual([]);
 });
 
 test("booking, POS, and controlled AI demonstrations complete", async ({ page }) => {

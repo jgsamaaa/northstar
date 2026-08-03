@@ -241,19 +241,25 @@ export const services: Service[] = [
     features: ["Product encoding", "Cashier accounts", "Inventory tracking", "Low-stock alerts", "Website-to-POS integration when supported", "Sales reports", "Staff training", "BIR-ready POS setup assistance using an appropriate accredited provider"], accent: "#8aa9ff",
   },
   {
-    slug: "ai-automation", code: "04", name: "Northstar Assist", label: "AI CUSTOMER ASSISTANCE",
+    slug: "custom-software-development", code: "04", name: "Northstar Custom", label: "CUSTOM SOFTWARE",
+    headline: "Custom software for validated business workflows.",
+    description: "Focused internal tools, dashboards, inventory, approvals, and operational systems scoped only when an established platform cannot support the work well.",
+    features: ["Workflow discovery and validation", "Internal dashboards and records", "Roles, permissions, and approvals", "Reports and exports", "Integrations assessed separately", "Testing, training, and handover"], accent: "#7597d4",
+  },
+  {
+    slug: "ai-automation", code: "05", name: "Northstar Assist", label: "AI CUSTOMER ASSISTANCE",
     headline: "Optional AI assistance with real human support.",
     description: "A separately scoped website assistant that answers from approved information and hands the conversation to your team when judgment is needed.",
     features: ["English, Tagalog, and Bisaya", "Approved FAQ responses", "Service recommendations", "Availability guidance", "Lead capture", "Human escalation"], accent: "#72e7c3",
   },
   {
-    slug: "automation-integrations", code: "05", name: "Northstar Automation", label: "AUTOMATION",
+    slug: "automation-integrations", code: "06", name: "Northstar Automation", label: "AUTOMATION",
     headline: "Reduce repetitive tasks and manual follow-up.",
     description: "Connect the practical handoffs, alerts, and records that slow teams down when they are handled manually.",
     features: ["Lead routing", "Booking notifications", "Customer follow-ups", "Record synchronization", "Staff alerts", "Human approval points"], accent: "#7f9ac6",
   },
   {
-    slug: "support-maintenance", code: "06", name: "Northstar Support", label: "ONGOING SUPPORT",
+    slug: "support-maintenance", code: "07", name: "Northstar Support", label: "ONGOING SUPPORT",
     headline: "Ongoing technical help after launch.",
     description: "Keep the system current and useful with monitoring, issue resolution, guidance, and planned improvements.",
     features: ["Content updates", "Integration monitoring", "Issue resolution", "Performance checks", "Staff guidance", "Vendor coordination"], accent: "#a6b4c7",

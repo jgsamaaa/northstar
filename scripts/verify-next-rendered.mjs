@@ -8,7 +8,7 @@ const root = process.cwd();
 const renderedTestPath = new URL("../tests/rendered-html.test.mjs", import.meta.url);
 const renderedSource = await readFile(renderedTestPath, "utf8");
 const renderedTestCount = renderedSource.match(/^test\(/gm)?.length ?? 0;
-assert.equal(renderedTestCount, 18, "The release contract requires exactly 18 rendered runtime tests");
+assert.equal(renderedTestCount, 20, "The release contract requires exactly 20 rendered runtime tests");
 await readFile(new URL("../.next/BUILD_ID", import.meta.url), "utf8");
 
 const port = Number(process.env.RENDERED_TEST_PORT || 4300 + (process.pid % 500));

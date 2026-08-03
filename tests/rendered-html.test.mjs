@@ -53,29 +53,32 @@ test("renders a focused, credible Northstar homepage", async () => {
   assert.match(html, /<title>Web Development Company Philippines \| Northstar Systems<\/title>/);
   assert.match(html, /name="description" content="Northstar builds professional websites and connected booking, sales, inventory, and automation systems for businesses across the Philippines\."/);
   assert.equal((html.match(/<h1\b/g) ?? []).length, 1);
-  assert.match(html, /Websites and connected business systems for Philippine companies\./);
+  assert.match(html, /name="keywords" content="business website Philippines,online booking system Philippines,POS system setup Philippines,inventory system Philippines,AI chatbot for business Philippines,business automation Philippines"/);
+  assert.match(html, /rel="canonical" href="https:\/\/northstarsystems\.ph"/);
+  assert.match(html, /"@type":"WebSite"/);
+  assert.match(html, /"@id":"https:\/\/northstarsystems\.ph\/#website"/);
+
+  assert.match(html, /<section class="hero">/);
+  assert.doesNotMatch(html, /growth-home-hero/);
+  assert.match(html, /Websites that help Philippine businesses earn trust and win more inquiries\./);
+  assert.match(html, /A professional website first\. Connected systems when they make sense\./);
   assert.match(html, /Website design and development/);
-  assert.match(html, /Online booking and reservations/);
-  assert.match(html, /POS and inventory implementation/);
-  assert.match(html, /Custom business software/);
-  assert.match(html, /AI assistance and business automation/);
-  assert.match(html, /Support after launch/);
-  assert.match(html, /Product demonstration/i);
-  assert.match(html, /Built for businesses across the Philippines\./);
-  assert.match(html, /Work presented with honest context\./);
+  assert.match(html, /Booking and business operations/);
+  assert.match(html, /POS, inventory, and custom systems/);
+  assert.match(html, /Real work, presented with honest context\./);
   for (const featuredProject of ["TOP ASIA", "Bukidnon", "Hidden Gardens Resort", "The Petite Creamery"]) {
     assert.match(html, new RegExp(featuredProject));
   }
   assert.doesNotMatch(html, /DR\. B\. Dental Clinic|Sight Expert Eye Care Clinic|Aloha Beach Resort|TeachReady Abroad|The Aureline|Redotest/);
   assert.doesNotMatch(html, /Northstar FleetOps/);
-  assert.match(html, /A clear process from first problem to working system\./);
-  assert.match(html, /What a Northstar project includes\./);
-  assert.match(html, /Frequently asked questions\./);
-  assert.match(html, /Request a Free Systems Audit/);
+  assert.match(html, /Built for businesses where every customer handoff matters\./);
+  assert.match(html, /Professional delivery is part of the product\./);
+  assert.match(html, /A clear process, without the usual agency fog\./);
+  assert.match(html, /FOUNDING CLIENT PROGRAM/);
+  assert.match(html, /Book a Free Systems Audit/);
   assert.match(html, /href="\/services\/websites"/);
-  assert.match(html, /href="\/services\/custom-software-development"/);
-  assert.match(html, /href="\/industries\/resorts-hotels"/);
-  assert.match(html, /href="\/industries\/dental-clinics"/);
+  assert.match(html, /href="\/services\/booking"/);
+  assert.match(html, /href="\/services\/pos-inventory"/);
   assert.match(html, /href="\/industries"/);
   assert.match(html, /href="\/projects"/);
   assert.match(html, /href="\/packages"/);

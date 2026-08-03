@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { GrowthHomePage } from "./growth-pages/home";
+import { publicSiteUrl, siteConfig } from "./site-config";
+import { HomePage } from "./site";
 
 export const metadata: Metadata = {
   title: { absolute: "Web Development Company Philippines | Northstar Systems" },
@@ -22,5 +23,18 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const nonce = (await headers()).get("x-nonce") ?? undefined;
-  return <GrowthHomePage nonce={nonce} />;
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${publicSiteUrl}/#website`,
+    url: publicSiteUrl,
+    name: siteConfig.name,
+    publisher: { "@id": `${publicSiteUrl}/#organization` },
+    inLanguage: "en-PH",
+  };
+
+  return <>
+    <script nonce={nonce} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema).replace(/</g, "\\u003c") }} />
+    <HomePage />
+  </>;
 }

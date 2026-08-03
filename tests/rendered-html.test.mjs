@@ -406,13 +406,13 @@ test("validates the single public production origin from the environment", async
     assert.notEqual(result.status, 0, rejected);
   }
 
-  const disabled = inspectConfiguredContactEmail("hello@northstarsystems.ph", false);
+  const disabled = inspectConfiguredContactEmail("rcsnyyy@gmail.com", false);
   assert.equal(disabled.status, 0, disabled.stderr);
   assert.equal(disabled.stdout.trim(), "null");
 
-  const enabled = inspectConfiguredContactEmail("hello@northstarsystems.ph", true);
+  const enabled = inspectConfiguredContactEmail("rcsnyyy@gmail.com", true);
   assert.equal(enabled.status, 0, enabled.stderr);
-  assert.equal(enabled.stdout.trim(), '"hello@northstarsystems.ph"');
+  assert.equal(enabled.stdout.trim(), '"rcsnyyy@gmail.com"');
 
   const empty = inspectConfiguredContactEmail("   ", true);
   assert.equal(empty.status, 0, empty.stderr);
@@ -422,17 +422,19 @@ test("validates the single public production origin from the environment", async
     const response = await request(route);
     assert.equal(response.status, 200, route);
     const html = await response.text();
-    assert.doesNotMatch(html, /mailto:/i, route);
+    assert.match(html, /href="mailto:rcsnyyy@gmail\.com"/i, route);
+    assert.match(html, />rcsnyyy@gmail\.com</i, route);
     assert.doesNotMatch(html, /hello@northstarsystems\.ph/i, route);
+    assert.doesNotMatch(html, /gabrieldumaug@gmail\.com/i, route);
   }
 
   const contactHtml = await (await request("/contact")).text();
-  assert.doesNotMatch(contactHtml, /Prefer to message us directly\?/i);
+  assert.match(contactHtml, /Prefer to message us directly\?/i);
   assert.match(contactHtml, /Request a Free Systems Audit/);
   const privacyHtml = await (await request("/privacy")).text();
-  assert.match(privacyHtml, /Privacy questions can be submitted through the Northstar Systems inquiry form/);
+  assert.match(privacyHtml, /Questions about privacy may be sent to <a href="mailto:rcsnyyy@gmail\.com">rcsnyyy@gmail\.com<\/a>\./);
   const termsHtml = await (await request("/terms")).text();
-  assert.match(termsHtml, /Questions about these terms can be submitted through the Northstar Systems inquiry form/);
+  assert.match(termsHtml, /Questions about these terms may be sent to <a href="mailto:rcsnyyy@gmail\.com">rcsnyyy@gmail\.com<\/a>\./);
 });
 
 test("redirects Vercel, www, and HTTP hosts to the matching branded path and query", async () => {

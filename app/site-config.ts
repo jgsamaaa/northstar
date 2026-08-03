@@ -34,8 +34,8 @@ export const siteConfig = {
   tagline: "Modern systems for growing businesses.",
   description:
     "Connected websites, booking, POS and inventory implementation, AI assistance, and automation for Philippine businesses.",
-  email: "hello@northstarsystems.ph",
-  emailConfigured: false,
+  email: "rcsnyyy@gmail.com",
+  emailConfigured: true,
   phone: "" as string,
   messengerLink: "" as string,
   location: "Serving businesses across the Philippines",

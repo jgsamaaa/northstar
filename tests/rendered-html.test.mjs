@@ -49,7 +49,11 @@ test("renders a focused, credible Northstar homepage", async () => {
   const response = await request();
   assert.equal(response.status, 200);
   const html = await response.text();
+  const homepageSource = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
 
+  assert.match(homepageSource, /import \{ HomePage \} from "\.\/site";/);
+  assert.match(homepageSource, /<HomePage \/>/);
+  assert.doesNotMatch(homepageSource, /GrowthHomePage|growth-pages\/home/);
   assert.match(html, /<title>Web Development Company Philippines \| Northstar Systems<\/title>/);
   assert.match(html, /name="description" content="Northstar builds professional websites and connected booking, sales, inventory, and automation systems for businesses across the Philippines\."/);
   assert.equal((html.match(/<h1\b/g) ?? []).length, 1);
@@ -59,7 +63,7 @@ test("renders a focused, credible Northstar homepage", async () => {
   assert.match(html, /"@id":"https:\/\/northstarsystems\.ph\/#website"/);
 
   assert.match(html, /<section class="hero">/);
-  assert.doesNotMatch(html, /growth-home-hero/);
+  assert.doesNotMatch(html, /growth-home-/);
   assert.match(html, /Websites that help Philippine businesses earn trust and win more inquiries\./);
   assert.match(html, /A professional website first\. Connected systems when they make sense\./);
   assert.match(html, /Website design and development/);
@@ -83,6 +87,8 @@ test("renders a focused, credible Northstar homepage", async () => {
   assert.match(html, /href="\/projects"/);
   assert.match(html, /href="\/packages"/);
   assert.match(html, /href="\/contact"/);
+  assert.match(html, /aria-label="Open Northstar AI assistant"/);
+  assert.match(html, /aria-controls="northstar-ai-assistant"/);
 
   assert.doesNotMatch(html, /EARLY CLIENT FEEDBACK|Mara L\.|Paolo R\.|Denise C\.|temporary launch copy/);
   assert.doesNotMatch(html, /Everything your business needs to operate online/);
@@ -400,13 +406,13 @@ test("validates the single public production origin from the environment", async
     assert.notEqual(result.status, 0, rejected);
   }
 
-  const disabled = inspectConfiguredContactEmail("hello@northstarsystems.ph", false);
+  const disabled = inspectConfiguredContactEmail("rcsnyyy@gmail.com", false);
   assert.equal(disabled.status, 0, disabled.stderr);
   assert.equal(disabled.stdout.trim(), "null");
 
-  const enabled = inspectConfiguredContactEmail("hello@northstarsystems.ph", true);
+  const enabled = inspectConfiguredContactEmail("rcsnyyy@gmail.com", true);
   assert.equal(enabled.status, 0, enabled.stderr);
-  assert.equal(enabled.stdout.trim(), '"hello@northstarsystems.ph"');
+  assert.equal(enabled.stdout.trim(), '"rcsnyyy@gmail.com"');
 
   const empty = inspectConfiguredContactEmail("   ", true);
   assert.equal(empty.status, 0, empty.stderr);
@@ -416,17 +422,19 @@ test("validates the single public production origin from the environment", async
     const response = await request(route);
     assert.equal(response.status, 200, route);
     const html = await response.text();
-    assert.doesNotMatch(html, /mailto:/i, route);
+    assert.match(html, /href="mailto:rcsnyyy@gmail\.com"/i, route);
+    assert.match(html, />rcsnyyy@gmail\.com</i, route);
     assert.doesNotMatch(html, /hello@northstarsystems\.ph/i, route);
+    assert.doesNotMatch(html, /gabrieldumaug@gmail\.com/i, route);
   }
 
   const contactHtml = await (await request("/contact")).text();
-  assert.doesNotMatch(contactHtml, /Prefer to message us directly\?/i);
+  assert.match(contactHtml, /Prefer to message us directly\?/i);
   assert.match(contactHtml, /Request a Free Systems Audit/);
   const privacyHtml = await (await request("/privacy")).text();
-  assert.match(privacyHtml, /Privacy questions can be submitted through the Northstar Systems inquiry form/);
+  assert.match(privacyHtml, /Questions about privacy may be sent to <a href="mailto:rcsnyyy@gmail\.com">rcsnyyy@gmail\.com<\/a>\./);
   const termsHtml = await (await request("/terms")).text();
-  assert.match(termsHtml, /Questions about these terms can be submitted through the Northstar Systems inquiry form/);
+  assert.match(termsHtml, /Questions about these terms may be sent to <a href="mailto:rcsnyyy@gmail\.com">rcsnyyy@gmail\.com<\/a>\./);
 });
 
 test("redirects Vercel, www, and HTTP hosts to the matching branded path and query", async () => {

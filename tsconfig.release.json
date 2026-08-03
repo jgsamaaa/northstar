@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "noEmit": true
+  },
+  "exclude": [
+    "node_modules",
+    ".next",
+    "dist",
+    "app/api/messenger/**",
+    "app/lib/messenger/**",
+    "build/**",
+    "db/**",
+    "drizzle.config.ts",
+    "examples/**",
+    "tests/messenger-conversation.test.ts",
+    "vite.config.ts",
+    "worker/**"
+  ]
+}

@@ -118,7 +118,7 @@ test("sitemap routes, navigation, icons, and branded 404 are production-correct"
   expect(sitemap.status()).toBe(200);
   const xml = await sitemap.text();
   const sitemapUrls = [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => match[1]);
-  expect(sitemapUrls).toHaveLength(16);
+  expect(sitemapUrls).toHaveLength(20);
   expect(sitemapUrls.every((url) => url.startsWith("https://northstarsystems.ph"))).toBe(true);
   for (const url of sitemapUrls) expect((await request.get(new URL(url).pathname)).status(), url).toBe(200);
   const robots = await request.get("/robots.txt");
@@ -329,6 +329,85 @@ test("project grid aligns paired cards, previews, sections, and actions without 
   expect(consoleErrors).toEqual([]);
 });
 
+test("Industries cards and Projects intro stay structured across desktop and mobile", async ({ page }) => {
+  const viewports = [
+    { width: 1440, height: 900 },
+    { width: 1024, height: 768 },
+    { width: 768, height: 900 },
+    { width: 390, height: 844 },
+  ] as const;
+
+  for (const viewport of viewports) {
+    await page.setViewportSize(viewport);
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/industries", { waitUntil: "networkidle" });
+    const industryGrid = page.locator(".industry-cards");
+    const cards = industryGrid.locator(":scope > article");
+    const recommendations = cards.locator(".industry-recommendation");
+    await expect(cards).toHaveCount(6);
+    await expect(recommendations).toHaveCount(6);
+    const industryGeometry = await industryGrid.evaluate((element) => {
+      const grid = element.getBoundingClientRect();
+      const nav = element.querySelector<HTMLElement>(":scope > .hub-growth-links")!.getBoundingClientRect();
+      const articles = [...element.querySelectorAll<HTMLElement>(":scope > article")].map((article) => article.getBoundingClientRect());
+      const recommendationBlocks = [...element.querySelectorAll<HTMLElement>(".industry-recommendation")].map((block) => {
+        const labelBox = block.querySelector<HTMLElement>(".industry-recommendation-label")!.getBoundingClientRect();
+        const textBox = block.querySelector<HTMLElement>(".industry-recommendation-text")!.getBoundingClientRect();
+        return {
+          labelTag: block.querySelector<HTMLElement>(".industry-recommendation-label")!.tagName,
+          textTag: block.querySelector<HTMLElement>(".industry-recommendation-text")!.tagName,
+          gap: textBox.top - labelBox.bottom,
+          contained: block.scrollWidth <= block.clientWidth && block.scrollHeight <= block.clientHeight,
+        };
+      });
+      return { grid, nav, articles, recommendationBlocks };
+    });
+    expect(Math.abs(industryGeometry.nav.left - industryGeometry.articles[0].left), `${viewport.width}px guide-nav left`).toBeLessThanOrEqual(1);
+    expect(Math.abs(industryGeometry.articles[viewport.width >= 1024 ? 1 : 0].right - industryGeometry.nav.right), `${viewport.width}px guide-nav right`).toBeLessThanOrEqual(1);
+    expect(industryGeometry.nav.bottom, `${viewport.width}px guide-nav order`).toBeLessThan(industryGeometry.articles[0].top);
+    expect(industryGeometry.recommendationBlocks.every(({ labelTag, textTag, gap, contained }) => labelTag === "SPAN" && textTag === "P" && gap >= 6 && contained), `${viewport.width}px recommendation structure`).toBe(true);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), `${viewport.width}px Industries overflow`).toBe(true);
+    if (viewport.width >= 1024) {
+      for (let index = 0; index < industryGeometry.articles.length; index += 2) {
+        expect(Math.abs(industryGeometry.articles[index].top - industryGeometry.articles[index + 1].top), `${viewport.width}px Industries row ${index / 2 + 1} top`).toBeLessThanOrEqual(1);
+        expect(Math.abs(industryGeometry.articles[index].height - industryGeometry.articles[index + 1].height), `${viewport.width}px Industries row ${index / 2 + 1} height`).toBeLessThanOrEqual(1);
+      }
+    }
+
+    await page.goto("/projects", { waitUntil: "networkidle" });
+    const projectsSection = page.locator(".projects-page");
+    const introSupport = projectsSection.locator(".projects-intro-support");
+    await expect(introSupport).toHaveCount(1);
+    const projectsGeometry = await projectsSection.evaluate((element) => {
+      const title = element.querySelector<HTMLElement>("h2")!.getBoundingClientRect();
+      const intro = element.querySelector<HTMLElement>(".section-title")!.getBoundingClientRect();
+      const summary = element.querySelector<HTMLElement>(".projects-intro-summary")!.getBoundingClientRect();
+      const support = element.querySelector<HTMLElement>(".projects-intro-support")!.getBoundingClientRect();
+      const context = element.querySelector<HTMLElement>(".portfolio-context")!.getBoundingClientRect();
+      const nav = element.querySelector<HTMLElement>(".projects-intro-support .hub-growth-links")!.getBoundingClientRect();
+      const grid = element.querySelector<HTMLElement>(".project-grid")!.getBoundingClientRect();
+      const launcher = document.querySelector<HTMLElement>(".ai-chat-launcher")!.getBoundingClientRect();
+      const titleRange = document.createRange();
+      titleRange.selectNodeContents(element.querySelector<HTMLElement>("h2")!);
+      const launcherOverlapsTitle = [...titleRange.getClientRects()].some((line) => launcher.left < line.right && launcher.right > line.left && launcher.top < line.bottom && launcher.bottom > line.top);
+      return { title, intro, summary, support, context, nav, grid, launcherOverlapsTitle };
+    });
+    expect(projectsGeometry.support.top - projectsGeometry.intro.bottom, `${viewport.width}px Projects support gap`).toBeGreaterThanOrEqual(24);
+    expect(projectsGeometry.grid.top - projectsGeometry.support.bottom, `${viewport.width}px Projects grid gap`).toBeGreaterThanOrEqual(40);
+    expect(projectsGeometry.context.left, `${viewport.width}px Projects context left`).toBeGreaterThanOrEqual(projectsGeometry.support.left - 1);
+    expect(projectsGeometry.nav.right, `${viewport.width}px Projects guide right`).toBeLessThanOrEqual(projectsGeometry.support.right + 1);
+    expect(projectsGeometry.launcherOverlapsTitle, `${viewport.width}px Projects launcher/title overlap`).toBe(false);
+    if (viewport.width >= 1024) {
+      expect(projectsGeometry.summary.left, `${viewport.width}px Projects intro columns`).toBeGreaterThan(projectsGeometry.title.right);
+      expect(projectsGeometry.nav.left, `${viewport.width}px Projects support columns`).toBeGreaterThan(projectsGeometry.context.right);
+    } else {
+      expect(projectsGeometry.summary.top, `${viewport.width}px Projects intro stack`).toBeGreaterThan(projectsGeometry.title.bottom);
+      expect(projectsGeometry.nav.top - projectsGeometry.context.bottom, `${viewport.width}px Projects support stack`).toBeGreaterThanOrEqual(16);
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), `${viewport.width}px Projects intro overflow`).toBe(true);
+  }
+});
+
 test("assistant remains reachable without obscuring primary controls on any public route", async ({ page }) => {
   test.setTimeout(180_000);
   const consoleErrors: string[] = [];
@@ -447,9 +526,10 @@ test("floating assistant manages focus and inquiry validation remains local", as
   await expect(launcher).toBeFocused();
 
   await page.goto("/contact", { waitUntil: "networkidle" });
-  await expect(page.locator('a[href^="mailto:"]')).toHaveCount(0);
+  await expect(page.locator('a[href^="mailto:"]')).toHaveCount(2);
+  await expect(page.locator('a[href="mailto:rcsnyyy@gmail.com"]')).toHaveCount(2);
   await expect(page.getByText("hello@northstarsystems.ph", { exact: true })).toHaveCount(0);
-  await expect(page.getByText("Prefer to message us directly?", { exact: true })).toHaveCount(0);
+  await expect(page.getByText("Prefer to message us directly?", { exact: true })).toHaveCount(1);
   await expect(page.getByRole("button", { name: /Request a Free Systems Audit/ })).toBeVisible();
   await page.getByRole("button", { name: /Request a Free Systems Audit/ }).click();
   await expect(page.getByText("Enter your full name.")).toBeVisible();

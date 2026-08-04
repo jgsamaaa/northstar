@@ -269,8 +269,19 @@ test("renders an honest, data-driven project index", async () => {
   assert.equal((html.match(/class="project-status"/g) ?? []).length, 15);
   assert.equal((html.match(/class="project-index"/g) ?? []).length, 15);
   assert.match(html, /class="project-card-footer"[^>]*>.*?class="project-status".*?class="project-live-link".*?class="project-index"/s);
+  assert.match(html, /class="section-title split-title">.*?class="projects-intro-summary".*?class="projects-intro-support">.*?class="portfolio-context".*?class="hub-growth-links"/s);
   assert.doesNotMatch(html, /direct booking actions|Booking journey|spa setting/i);
   assert.doesNotMatch(html, /Northstar FleetOps|increased revenue|conversion rate|trusted by/i);
+});
+
+test("renders every industry recommendation as a labelled text block", async () => {
+  const response = await request("/industries");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.equal((html.match(/class="industry-recommendation"/g) ?? []).length, 6);
+  assert.equal((html.match(/class="industry-recommendation-label"/g) ?? []).length, 6);
+  assert.equal((html.match(/class="industry-recommendation-text"/g) ?? []).length, 6);
+  assert.equal((html.match(/<span class="industry-recommendation-label">RECOMMENDED SYSTEM<\/span><p class="industry-recommendation-text">/g) ?? []).length, 6);
 });
 
 test("keeps personal founder identity off public pages", async () => {

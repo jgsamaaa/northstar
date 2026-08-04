@@ -334,6 +334,12 @@ svg { flex:none; }
 .projects-page { padding-bottom:120px; background:var(--paper); }
 .portfolio-context { max-width:880px; margin:0 auto 42px; padding:18px 22px; border-left:3px solid var(--blue); background:#e9f2fb; color:#34475e; font-size:14px; line-height:1.65; }
 .portfolio-context strong { color:var(--blue-deep); }
+.projects-intro-summary { margin:0; }
+.projects-intro-support { margin-top:32px; display:grid; grid-template-columns:minmax(0,1.45fr) minmax(320px,.75fr); gap:28px; align-items:stretch; }
+.projects-intro-support .portfolio-context { max-width:none; margin:0; padding:20px 22px; }
+.projects-intro-support .hub-growth-links { margin:0; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+.projects-intro-support .hub-growth-links a { height:100%; }
+.projects-page .project-grid { margin-top:52px; }
 .projects-page .project-card-copy { padding-right:48px; }
 body:has(.projects-page) .ai-chat-launcher { right:16px; width:52px; min-height:52px; padding:0; justify-content:center; }
 body:has(.projects-page) .ai-chat-launcher span { display:none; }
@@ -566,11 +572,15 @@ body:has(.projects-page) .ai-chat-launcher span { display:none; }
 .legal-note { grid-column:1/-1; padding:25px; border-left:3px solid var(--blue-deep); background:#e3e7eb; }
 .legal-note p { margin-bottom:0; font-size:15px; }
 .industry-cards { display:grid; grid-template-columns:repeat(2,1fr); }
-.industry-cards article { min-height:440px; padding:42px; border-right:1px solid var(--line-ink); border-bottom:1px solid var(--line-ink); }
-.industry-cards article:nth-child(2n) { border-right:0; }
+.industry-cards>.hub-growth-links { grid-column:1/-1; margin:0 0 44px; }
+.industry-cards article { min-height:440px; padding:42px; display:flex; flex-direction:column; border-right:1px solid var(--line-ink); border-bottom:1px solid var(--line-ink); }
+.industry-cards article:nth-of-type(2n) { border-right:0; }
 .industry-cards article>span { color:var(--blue-deep); font-size:14px; }
 .industry-cards h2 { font:500 42px/1 var(--display); }
 .industry-cards p { color:var(--muted); font-size:17px; line-height:1.65; }
+.industry-recommendation { margin:25px 0; padding:17px; display:grid; row-gap:9px; border-left:3px solid var(--blue-deep); background:#e0e5ea; }
+.industry-recommendation-label { display:block; color:var(--blue-deep); font-size:12px; letter-spacing:.1em; text-transform:uppercase; }
+.industry-cards .industry-recommendation-text { margin:0; color:var(--ink); font-size:16px; font-weight:700; line-height:1.5; }
 .about-story { display:grid; grid-template-columns:1fr 1fr; gap:90px; }
 .standalone-packages { border-top:1px solid var(--line-ink); }
 .standalone-packages .packages-grid { margin-top:0; }
@@ -648,6 +658,10 @@ body:has(.projects-page) .ai-chat-launcher span { display:none; }
   .projects-page .project-card-copy>ul { width:100%; margin:28px 0; }
   .projects-page .project-outcome { margin-bottom:30px; }
   .projects-page .project-card-footer { padding-top:30px; }
+  .projects-intro-support { margin-top:28px; grid-template-columns:1fr; gap:18px; }
+  .projects-intro-support .hub-growth-links { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .projects-page .project-grid { margin-top:42px; }
+  body:has(.projects-page) .ai-chat-launcher { top:auto; right:8px; bottom:8px; width:44px; min-height:44px; }
   .project-card-copy h3,.project-grid-compact .project-card-copy h3 { margin-top:28px; font-size:42px; }
   .project-index { font-size:48px; }
   .home-offer-grid,.home-standard-grid,.home-process-grid { grid-template-columns:1fr; }

@@ -282,6 +282,12 @@ svg { flex:none; }
 .project-grid { margin-top:64px; display:grid; gap:28px; }
 .project-grid>div { min-width:0; }
 .project-grid article { min-height:600px; display:grid; grid-template-columns:1.12fr .88fr; position:relative; overflow:hidden; border:1px solid var(--line-ink); background:#f8f6f0; }
+.projects-page .project-grid { grid-template-columns:repeat(2,minmax(0,1fr)); grid-auto-rows:auto; align-items:stretch; }
+.projects-page .project-grid>div { min-width:0; height:100%; }
+.projects-page .project-grid article { min-height:0; height:100%; grid-template-columns:1fr; grid-template-rows:auto 1fr; }
+.projects-page .project-visual { min-height:0; height:auto; aspect-ratio:4/3; padding:clamp(28px,3vw,44px); }
+.projects-page .project-preview-shell { width:92%; transform:none; }
+.projects-page .project-visual:hover .project-preview-shell { transform:translateY(-4px); }
 .project-visual { min-height:600px; position:relative; display:flex; align-items:center; justify-content:center; padding:clamp(30px,4vw,58px); overflow:hidden; isolation:isolate; background:linear-gradient(145deg,color-mix(in srgb,var(--project-accent) 16%,#0b1521),#07101a 72%); color:white; }
 .project-visual::before { content:""; position:absolute; inset:-20%; z-index:-1; background:radial-gradient(circle at 18% 18%,color-mix(in srgb,var(--project-accent) 34%,transparent),transparent 34%),linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px); background-size:auto,44px 44px,44px 44px; transform:rotate(-3deg); }
 .project-preview-shell { width:min(100%,760px); position:relative; z-index:1; display:block; overflow:hidden; border:1px solid rgba(255,255,255,.32); border-radius:3px; background:#f7f5ef; box-shadow:0 28px 72px rgba(0,0,0,.44),0 4px 12px rgba(0,0,0,.24); transform:perspective(1200px) rotateY(-2.2deg) rotateX(1deg); transform-origin:center; transition:transform .38s ease,box-shadow .38s ease; }
@@ -296,7 +302,10 @@ svg { flex:none; }
 .project-preview-image img { object-fit:cover; object-position:top center; }
 .project-preview-label { position:absolute; left:clamp(18px,2.5vw,36px); bottom:clamp(16px,2.2vw,30px); color:rgba(255,255,255,.6); font-size:9px; font-weight:800; letter-spacing:.2em; }
 .project-visual:focus-visible { outline:3px solid var(--project-accent); outline-offset:-3px; }
-.project-card-copy { padding:50px 46px; display:flex; flex-direction:column; align-items:flex-start; }
+.project-card-copy { min-width:0; padding:50px 46px; display:flex; flex-direction:column; align-items:flex-start; }
+.projects-page .project-card-copy { height:100%; padding:36px; display:grid; grid-template-rows:minmax(56px,auto) auto auto auto auto 1fr auto; row-gap:24px; align-items:start; }
+.projects-page .project-card-copy h3,.projects-page .project-card-copy>p,.projects-page .project-card-copy>ul,.projects-page .project-outcome { margin:0; }
+.projects-page .project-card-copy h3 { font-size:46px; }
 .project-meta { width:100%; padding-bottom:18px; display:flex; justify-content:space-between; gap:20px; border-bottom:1px solid var(--line-ink); color:var(--blue-deep); font-size:11px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
 .project-card-copy h3 { margin:42px 0 18px; font:500 clamp(44px,4vw,60px)/.95 var(--display); letter-spacing:-.035em; }
 .project-card-copy>p { margin:0; color:var(--muted); font-size:17px; line-height:1.7; }
@@ -305,13 +314,17 @@ svg { flex:none; }
 .project-outcome { margin:0 0 30px; padding:20px 0; border-top:1px solid var(--line-ink); border-bottom:1px solid var(--line-ink); }
 .project-outcome small { color:var(--blue-deep); font-size:11px; font-weight:800; letter-spacing:.13em; }
 .project-outcome p { margin:10px 0 0; color:var(--muted); font-size:15px; line-height:1.65; }
+.project-card-footer { width:auto; align-self:stretch; margin-top:auto; }
+.projects-page .project-card-footer { grid-row:7; padding-top:24px; display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:end; gap:24px; }
 .project-status { margin-top:auto; display:flex; align-items:center; gap:9px; color:#35465a; font-size:13px; font-weight:800; }
+.projects-page .project-status { margin-top:0; }
 .project-status i { width:8px; height:8px; border-radius:50%; background:var(--project-accent); box-shadow:0 0 0 4px color-mix(in srgb,var(--project-accent) 18%,transparent); }
 .project-live-link { min-height:44px; margin-top:14px; padding:8px 0; display:inline-flex; align-items:center; gap:8px; color:var(--blue-deep); font-size:13px; font-weight:800; text-decoration:none; border-bottom:1px solid currentColor; }
 .project-live-link:hover svg { transform:translateX(3px); }
 .project-live-link svg { transition:transform .2s ease; }
 .project-live-link:focus-visible { outline:2px solid var(--blue-deep); outline-offset:4px; }
 .project-index { position:absolute; right:18px; bottom:12px; color:#646e7b; font:500 66px/1 var(--display); }
+.projects-page .project-index { position:static; align-self:end; }
 .project-grid-compact { grid-template-columns:repeat(2,1fr); gap:18px; }
 .project-grid-compact article { min-height:0; height:100%; grid-template-columns:1fr; }
 .project-grid-compact .project-visual { min-height:390px; }
@@ -321,8 +334,22 @@ svg { flex:none; }
 .projects-page { padding-bottom:120px; background:var(--paper); }
 .portfolio-context { max-width:880px; margin:0 auto 42px; padding:18px 22px; border-left:3px solid var(--blue); background:#e9f2fb; color:#34475e; font-size:14px; line-height:1.65; }
 .portfolio-context strong { color:var(--blue-deep); }
-.projects-page .project-card-copy { padding-right:max(180px,13vw); }
-.projects-page .project-index { right:168px; }
+.projects-page .project-card-copy { padding-right:48px; }
+body:has(.projects-page) .ai-chat-launcher { right:16px; width:52px; min-height:52px; padding:0; justify-content:center; }
+body:has(.projects-page) .ai-chat-launcher span { display:none; }
+
+@media (min-width:801px) and (max-width:1100px) {
+  .projects-page .project-card-copy { padding:28px 48px 28px 28px; grid-template-rows:minmax(68px,auto) auto auto auto auto 1fr auto; row-gap:20px; }
+  .projects-page .project-card-copy h3 { font-size:38px; line-height:.98; }
+  .projects-page .project-card-copy>p { font-size:16px; line-height:1.65; }
+  .projects-page .project-card-copy>ul li { font-size:11px; }
+  .projects-page .project-outcome p { font-size:14px; }
+}
+
+@media (min-width:801px) and (max-width:1023px) {
+  .projects-page .project-grid { grid-template-columns:1fr; }
+  .projects-page .project-grid article { height:auto; grid-template-rows:auto auto; }
+}
 
 /* Industries */
 .industry-selector { padding:116px max(28px,calc((100vw - 1320px)/2)); background:var(--paper); color:var(--ink); }
@@ -612,6 +639,15 @@ svg { flex:none; }
   .project-preview-shell { transform:perspective(900px) rotateY(-1.2deg) rotateX(.5deg); }
   .project-preview-label { left:16px; bottom:14px; }
   .project-card-copy,.project-grid-compact .project-card-copy { min-height:0; padding:30px 22px; }
+  .projects-page .project-grid { grid-template-columns:1fr; }
+  .projects-page .project-grid article { height:auto; grid-template-rows:auto auto; }
+  .projects-page .project-visual { min-height:0; aspect-ratio:4/3; padding:24px 16px 38px; }
+  .projects-page .project-preview-shell { width:84%; transform:none; }
+  .projects-page .project-card-copy { height:auto; padding:30px 52px 30px 22px; display:flex; row-gap:0; }
+  .projects-page .project-card-copy h3 { margin:28px 0 18px; font-size:42px; }
+  .projects-page .project-card-copy>ul { width:100%; margin:28px 0; }
+  .projects-page .project-outcome { margin-bottom:30px; }
+  .projects-page .project-card-footer { padding-top:30px; }
   .project-card-copy h3,.project-grid-compact .project-card-copy h3 { margin-top:28px; font-size:42px; }
   .project-index { font-size:48px; }
   .home-offer-grid,.home-standard-grid,.home-process-grid { grid-template-columns:1fr; }
@@ -797,6 +833,9 @@ svg { flex:none; }
 .ai-chat.is-open .ai-chat-launcher { visibility:hidden; }
 
 @media (max-width:600px) {
+  .projects-page .project-grid { grid-auto-rows:auto; }
+  .projects-page .project-visual { aspect-ratio:1/1; }
+  .projects-page .project-preview-shell { width:92%; }
   .ai-chat { padding:16px 16px max(16px,env(safe-area-inset-bottom)); }
   .ai-chat-launcher { right:16px; bottom:max(16px,env(safe-area-inset-bottom)); width:52px; min-height:52px; padding:0; justify-content:center; }
   .ai-chat-launcher span { display:none; }

@@ -265,6 +265,10 @@ test("renders an honest, data-driven project index", async () => {
   assert.match(html, /Stay-inquiry journey/i);
   assert.match(html, /planned spa experience/i);
   assert.match(html, /legacy Dalisay Cove deployment hostname/i);
+  assert.equal((html.match(/class="project-card-footer"/g) ?? []).length, 15);
+  assert.equal((html.match(/class="project-status"/g) ?? []).length, 15);
+  assert.equal((html.match(/class="project-index"/g) ?? []).length, 15);
+  assert.match(html, /class="project-card-footer"[^>]*>.*?class="project-status".*?class="project-live-link".*?class="project-index"/s);
   assert.doesNotMatch(html, /direct booking actions|Booking journey|spa setting/i);
   assert.doesNotMatch(html, /Northstar FleetOps|increased revenue|conversion rate|trusted by/i);
 });

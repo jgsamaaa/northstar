@@ -174,20 +174,150 @@ test("sitemap routes, navigation, icons, and branded 404 are production-correct"
   await expect(page.getByRole("navigation", { name: "Page recovery" }).getByRole("link", { name: /Free Systems Audit/ })).toBeVisible();
 });
 
-test("project index renders every approved preview without overflow", async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/projects", { waitUntil: "networkidle" });
-  await page.emulateMedia({ reducedMotion: "reduce" });
+test("project grid aligns paired cards, previews, sections, and actions without overflow", async ({ page }) => {
+  test.setTimeout(240_000);
+  const desktopViewports = [
+    { width: 1600, height: 1000 },
+    { width: 1440, height: 900 },
+    { width: 1280, height: 800 },
+    { width: 1024, height: 768 },
+  ] as const;
+  const stackedViewports = [
+    { width: 900, height: 900 },
+    { width: 768, height: 900 },
+    { width: 430, height: 900 },
+    { width: 390, height: 844 },
+    { width: 375, height: 812 },
+    { width: 320, height: 700 },
+  ] as const;
+  const consoleErrors: string[] = [];
+  page.on("console", (message) => { if (message.type() === "error") consoleErrors.push(message.text()); });
+  page.on("pageerror", (error) => consoleErrors.push(error.message));
 
-  const cards = page.locator(".project-grid article");
-  await expect(cards).toHaveCount(15);
-  for (let index = 0; index < 15; index += 1) {
-    const card = cards.nth(index);
-    await card.scrollIntoViewIfNeeded();
-    await expect.poll(() => card.locator(".project-preview-image img").evaluate((image) => {
-      const preview = image as HTMLImageElement;
-      return preview.complete && preview.naturalWidth > 0;
-    })).toBe(true);
+  for (const viewport of [...desktopViewports, ...stackedViewports]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/projects", { waitUntil: "networkidle" });
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    const grid = page.locator(".projects-page .project-grid");
+    const cards = grid.locator("article");
+    await expect(cards).toHaveCount(15);
+
+    if (viewport.width === 1440) {
+      for (const card of await cards.all()) {
+        await card.scrollIntoViewIfNeeded();
+        await expect.poll(() => card.locator(".project-preview-image img").evaluate((image) => {
+          const preview = image as HTMLImageElement;
+          return preview.complete && preview.naturalWidth > 0;
+        })).toBe(true);
+      }
+    }
+
+    const columnCount = await grid.evaluate((element) => getComputedStyle(element).gridTemplateColumns.split(" ").filter(Boolean).length);
+    expect(columnCount, `${viewport.width}px project columns`).toBe(viewport.width >= 1024 ? 2 : 1);
+    const metrics = await cards.evaluateAll((elements) => elements.map((card) => {
+      const article = card as HTMLElement;
+      const cardRect = article.getBoundingClientRect();
+      const box = (selector: string) => article.querySelector<HTMLElement>(selector)!.getBoundingClientRect();
+      const visual = box(".project-visual");
+      const preview = box(".project-preview-image");
+      const badge = box(".project-preview-label");
+      const meta = box(".project-meta");
+      const title = box("h3");
+      const summary = box(".project-card-copy > p");
+      const services = box(".project-card-copy > ul");
+      const outcome = box(".project-outcome");
+      const footer = box(".project-card-footer");
+      const liveLink = box(".project-live-link");
+      const index = box(".project-index");
+      const image = article.querySelector<HTMLImageElement>(".project-preview-image img")!;
+      const meaningfulRight = Math.max(...[title, summary, services, outcome, footer, index].map(({ right }) => right));
+      return {
+        id: article.id,
+        cardHeight: cardRect.height,
+        cardWidth: cardRect.width,
+        mediaHeight: visual.height,
+        previewWidth: preview.width,
+        previewHeight: preview.height,
+        badgeLeftInset: badge.left - visual.left,
+        badgeBottomInset: visual.bottom - badge.bottom,
+        metaTop: meta.top - cardRect.top,
+        titleTop: title.top - cardRect.top,
+        titleBottom: title.bottom - cardRect.top,
+        summaryTop: summary.top - cardRect.top,
+        summaryBottom: summary.bottom - cardRect.top,
+        servicesTop: services.top - cardRect.top,
+        servicesBottom: services.bottom - cardRect.top,
+        outcomeTop: outcome.top - cardRect.top,
+        outcomeBottom: outcome.bottom - cardRect.top,
+        footerTop: footer.top - cardRect.top,
+        numberBaseline: index.bottom - cardRect.top,
+        footerFits: liveLink.right <= index.left,
+        contentContained: article.scrollWidth <= article.clientWidth && article.scrollHeight <= article.clientHeight + 1,
+        headingFits: title.width <= cardRect.width && article.querySelector<HTMLElement>("h3")!.scrollWidth <= article.querySelector<HTMLElement>("h3")!.clientWidth,
+        imageFit: getComputedStyle(image).objectFit,
+        imagePosition: getComputedStyle(image).objectPosition,
+        meaningfulRight,
+      };
+    }));
+
+    const spread = (values: number[]) => Math.max(...values) - Math.min(...values);
+    expect(spread(metrics.map(({ mediaHeight }) => mediaHeight)), `${viewport.width}px media heights`).toBeLessThanOrEqual(1);
+    expect(spread(metrics.map(({ previewWidth }) => previewWidth)), `${viewport.width}px preview widths`).toBeLessThanOrEqual(1);
+    expect(spread(metrics.map(({ previewHeight }) => previewHeight)), `${viewport.width}px preview heights`).toBeLessThanOrEqual(1);
+    expect(metrics.every(({ previewWidth, previewHeight }) => Math.abs(previewWidth / previewHeight - 1.6) < 0.02), `${viewport.width}px preview ratios`).toBe(true);
+    expect(spread(metrics.map(({ badgeLeftInset }) => badgeLeftInset)), `${viewport.width}px badge left insets`).toBeLessThanOrEqual(1);
+    expect(spread(metrics.map(({ badgeBottomInset }) => badgeBottomInset)), `${viewport.width}px badge bottom insets`).toBeLessThanOrEqual(1);
+    expect(metrics.every(({ footerFits, contentContained, headingFits, imageFit }) => footerFits && contentContained && headingFits && imageFit === "cover"), `${viewport.width}px card containment`).toBe(true);
+    expect(new Set(metrics.map(({ imagePosition }) => imagePosition)).size, `${viewport.width}px image positions`).toBe(1);
+    const sectionSpacingFailures = metrics.map(({ id, titleBottom, summaryTop, summaryBottom, servicesTop, servicesBottom, outcomeTop, outcomeBottom, footerTop }) => ({
+      id,
+      gaps: [summaryTop - titleBottom, servicesTop - summaryBottom, outcomeTop - servicesBottom, footerTop - outcomeBottom],
+    })).filter(({ gaps }) => gaps.slice(0, 3).some((gap) => gap < 15.5 || gap > 32) || gaps[3] < 15.5);
+    expect(sectionSpacingFailures, `${viewport.width}px section spacing`).toEqual([]);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), `${viewport.width}px document overflow`).toBe(true);
+    const launcherBox = await page.locator(".ai-chat-launcher").boundingBox();
+    expect(launcherBox, `${viewport.width}px assistant launcher`).not.toBeNull();
+    const assistantExclusionFailures = metrics
+      .filter(({ meaningfulRight }) => meaningfulRight > launcherBox!.x + .5)
+      .map(({ id, meaningfulRight }) => ({ id, meaningfulRight, launcherLeft: launcherBox!.x }));
+    expect(assistantExclusionFailures, `${viewport.width}px assistant horizontal exclusion`).toEqual([]);
+
+    if (viewport.width >= 1024) {
+      const alignedFields = ["cardHeight", "mediaHeight", "metaTop", "titleTop", "footerTop", "numberBaseline"] as const;
+      for (let index = 0; index + 1 < metrics.length; index += 2) {
+        for (const field of alignedFields) {
+          expect(Math.abs(metrics[index][field] - metrics[index + 1][field]), `${viewport.width}px row ${index / 2 + 1} ${field}`).toBeLessThanOrEqual(1);
+        }
+      }
+    } else {
+      expect(metrics.every(({ cardWidth }) => cardWidth <= viewport.width), `${viewport.width}px card widths`).toBe(true);
+      expect(await page.locator(".projects-page .project-live-link").evaluateAll((links) => links.every((link) => link.getBoundingClientRect().height >= 44)), `${viewport.width}px action targets`).toBe(true);
+      for (const target of await page.locator(".project-card-footer").all()) {
+        await target.evaluate((element) => element.scrollIntoView({ block: "center" }));
+        const overlap = await page.evaluate(() => {
+          const launcher = document.querySelector<HTMLElement>(".ai-chat-launcher")!.getBoundingClientRect();
+          return [...document.querySelectorAll<HTMLElement>(".project-card-footer a,.project-status,.project-index")].some((element) => {
+            const rect = element.getBoundingClientRect();
+            if (rect.bottom <= 0 || rect.top >= innerHeight) return false;
+            return launcher.left < rect.right && launcher.right > rect.left && launcher.top < rect.bottom && launcher.bottom > rect.top;
+          });
+        });
+        expect(overlap, `${viewport.width}px assistant overlap`).toBe(false);
+      }
+    }
+
+    for (const target of await page.locator(".final-cta .button,footer").all()) {
+      await target.evaluate((element) => element.scrollIntoView({ block: "center" }));
+      const overlap = await page.evaluate(() => {
+        const launcher = document.querySelector<HTMLElement>(".ai-chat-launcher")!.getBoundingClientRect();
+        return [...document.querySelectorAll<HTMLElement>(".final-cta .button,footer a")].some((element) => {
+          const rect = element.getBoundingClientRect();
+          if (rect.bottom <= 0 || rect.top >= innerHeight) return false;
+          return launcher.left < rect.right && launcher.right > rect.left && launcher.top < rect.bottom && launcher.bottom > rect.top;
+        });
+      });
+      expect(overlap, `${viewport.width}px assistant final-content overlap`).toBe(false);
+    }
   }
 
   const liveLinks = page.locator(".project-live-link");
@@ -196,18 +326,7 @@ test("project index renders every approved preview without overflow", async ({ p
     const anchor = link as HTMLAnchorElement;
     return anchor.href.startsWith("https://") && anchor.target === "_blank" && anchor.rel.includes("noreferrer");
   }))).toBe(true);
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
-
-  await page.locator("#bukidnon").scrollIntoViewIfNeeded();
-  await page.evaluate(() => window.scrollBy(0, -88));
-  await page.screenshot({ path: `${portfolioEvidenceDir}/projects-desktop.png` });
-
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.locator("#redotest").scrollIntoViewIfNeeded();
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
-  const redotestCard = page.locator("#redotest");
-  expect(await redotestCard.evaluate((card) => card.getBoundingClientRect().width <= document.documentElement.clientWidth)).toBe(true);
-  await page.screenshot({ path: `${portfolioEvidenceDir}/projects-mobile.png` });
+  expect(consoleErrors).toEqual([]);
 });
 
 test("assistant remains reachable without obscuring primary controls on any public route", async ({ page }) => {

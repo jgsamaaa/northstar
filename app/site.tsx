@@ -148,7 +148,31 @@ function ProjectVisual({ project }: { project: Project }) {
 function ProjectCards({ compact = false }: { compact?: boolean }) {
   const featuredSlugs = ["top-asia", "bukidnon", "hidden-gardens-resort", "the-petite-creamery"];
   const visibleProjects = compact ? projects.filter((project) => featuredSlugs.includes(project.slug)) : projects;
-  return <div className={`project-grid ${compact ? "project-grid-compact" : ""}`}>{visibleProjects.map((project, index) => <Reveal key={project.slug}><article id={project.slug} style={{ "--project-accent": project.accent } as CSSProperties}><ProjectVisual project={project}/><div className="project-card-copy"><div className="project-meta"><span>{project.category}</span><span>{project.year}</span></div><h3>{project.name}</h3><p>{project.summary}</p><ul>{project.services.map(service => <li key={service}>{service}</li>)}</ul>{!compact&&<div className="project-outcome"><small>WHAT WAS DESIGNED</small><p>{project.outcome}</p></div>}<span className="project-status"><i/>{project.status}</span><a className="project-live-link" href={project.href} target="_blank" rel="noreferrer">View live project <ArrowRight size={17} aria-hidden="true"/></a></div><span className="project-index">{String(index + 1).padStart(2, "0")}</span></article></Reveal>)}</div>;
+  return <div className={`project-grid ${compact ? "project-grid-compact" : ""}`}>
+    {visibleProjects.map((project, index) => <Reveal key={project.slug}>
+      <article id={project.slug} style={{ "--project-accent": project.accent } as CSSProperties}>
+        <ProjectVisual project={project}/>
+        <div className="project-card-copy">
+          <div className="project-meta"><span>{project.category}</span><span>{project.year}</span></div>
+          <h3>{project.name}</h3>
+          <p>{project.summary}</p>
+          <ul>{project.services.map(service => <li key={service}>{service}</li>)}</ul>
+          {!compact&&<div className="project-outcome"><small>WHAT WAS DESIGNED</small><p>{project.outcome}</p></div>}
+          {compact ? <>
+            <span className="project-status"><i/>{project.status}</span>
+            <a className="project-live-link" href={project.href} target="_blank" rel="noreferrer">View live project <ArrowRight size={17} aria-hidden="true"/></a>
+            <span className="project-index">{String(index + 1).padStart(2, "0")}</span>
+          </> : <div className="project-card-footer">
+            <div className="project-card-actions">
+              <span className="project-status"><i/>{project.status}</span>
+              <a className="project-live-link" href={project.href} target="_blank" rel="noreferrer">View live project <ArrowRight size={17} aria-hidden="true"/></a>
+            </div>
+            <span className="project-index">{String(index + 1).padStart(2, "0")}</span>
+          </div>}
+        </div>
+      </article>
+    </Reveal>)}
+  </div>;
 }
 
 export function HomePage() {
